@@ -18,10 +18,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 //@Data
 public class Permission implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @Column(name = "name")
+
+	@Column(name = "name")
     private String name;
     
 	@JsonBackReference
@@ -40,7 +42,6 @@ public class Permission implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	
 }
 

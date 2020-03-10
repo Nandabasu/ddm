@@ -1,27 +1,28 @@
-INSERT INTO oauth_client_details (client_id, client_secret, web_server_redirect_uri, scope, access_token_validity, refresh_token_validity, resource_ids, authorized_grant_types, additional_information) VALUES ('mobile', '{bcrypt}$2a$10$gPhlXZfms0EpNHX0.HHptOhoFD1AoxSr/yUIdTqA8vtjeP4zi0DDu', 'http://localhost:8080/code', 'READ,WRITE', '3600', '10000', 'inventory,payment', 'authorization_code,password,refresh_token,implicit', '{}');
-
- INSERT INTO PERMISSION (NAME) VALUES
- ('create_profile'),
- ('read_profile'),
- ('update_profile'),
- ('delete_profile');
-
- INSERT INTO role (NAME) VALUES
-		('ROLE_admin'),('ROLE_operator');
-
- INSERT INTO PERMISSION_ROLE (PERMISSION_ID, ROLE_ID) VALUES
-     (1,1), /*create-> admin */
-     (2,1), /* read admin */
-     (3,1), /* update admin */
-     (4,1), /* delete admin */
-     (2,2),  /* read operator */
-     (3,2);  /* update operator */
+INSERT INTO permission (ID, NAME) VALUES(1, 'CREATE_GROUP');
+INSERT INTO permission (ID, NAME) VALUES(2, 'UPDATE_GROUP');
+INSERT INTO permission (ID, NAME) VALUES(3, 'CREATE_USER');
+INSERT INTO permission (ID, NAME) VALUES(4, 'UPDATE_USER');
+INSERT INTO permission (ID, NAME) VALUES(5, 'CREATE_ENTITY_USER');
+INSERT INTO permission (ID, NAME) VALUES(6, 'UPDATE_ENTITY_USER');
+INSERT INTO permission (ID, NAME) VALUES(7, 'UPLOAD_DOCUMENT');
+INSERT INTO permission (ID, NAME) VALUES(8, 'DOWNLOAD_DOCUMENT');
+INSERT INTO permission (ID, NAME) VALUES(9, 'VIEW_DOCUMENT');
 
 
-insert into user (id, username,password, email, fullname, occupation, pan, dob, mobile, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked) VALUES ('1', 'krish','{bcrypt}$2a$10$ODGwrk2ufy5d7T6afmACwOA/6j6rvXiP5amAMt1YjOQSdEw44QdqG', 'k@krishantha.com', 'Krish Srilank', 'Software Architect','AQWOOP09','1988-20-09','9900990099','1', '1', '1', '1');
-insert into  user (id, username,password, email, fullname, occupation, pan, dob, mobile,enabled, accountNonExpired, credentialsNonExpired, accountNonLocked) VALUES ('2', 'suranga', '{bcrypt}$2a$10$wQ8vZl3Zm3.zDSIcZEYym.bGq3fPMJXH9k.Vhudcfr6O6KQwDPSt6','k@krishantha.com', 'Krish Srilanka Second','CEO','AQWWES98','1988-09-8','9988998899','1', '1', '1', '1');
+INSERT INTO ROLE(ID, NAME) VALUES(1, 'MASTER_ADMIN');
+INSERT INTO ROLE(ID, NAME) VALUES(2, 'GROUP_ADMIN');
+INSERT INTO ROLE(ID, NAME) VALUES(3, 'USER');
+INSERT INTO ROLE(ID, NAME) VALUES(4, 'ENTITY_USER');
 
-INSERT INTO ROLE_USER (ROLE_ID, USER_ID)
-    VALUES
-    (1, 1) /* krish-admin */,
-    (2, 2) /* suranga-operatorr */ ;
+insert into permission_role (permission_id, role_id) values(1, 1);
+insert into permission_role (permission_id, role_id) values(2, 1);
+insert into permission_role (permission_id, role_id) values(7, 1);
+insert into permission_role (permission_id, role_id) values(8, 1);
+insert into permission_role (permission_id, role_id) values(9, 1);
+
+INSERT INTO USER_PROFILE(ID, DOB,ENTITY_TYPE,fullname ,MOBILE, OCCUPATION,PAN) VALUES(1, '1988-12-12', null ,'Dheeraj Kumar', '9900123450','CA','AQPPN8980Q');
+
+INSERT INTO USER(ID, accountNonExpired, accountNonLocked, credentialsNonExpired, email, enabled, password, username, group_id, profile_id) values(1,1,1,1,'dheeraj@gmail.com',1,'{bcrypt}$2a$10$aw/b/806Qm9pE7Rx4x6TxuuJkn4.qi/rTXZ2Xdd/SV5x6HXKPp4uO','dheeraj', null ,'1');
+
+
+INSERT INTO `ddm_dev5`.`role_user` (`user_id`, `role_id`) VALUES ('1', '1');

@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -30,15 +31,21 @@ public class Group  implements Serializable{
 	@Column(name="group_name")
 	private String name;
 	
-	/*@JsonBackReference
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name="user_group", joinColumns = @JoinColumn(name="group_id"),
-			inverseJoinColumns = @JoinColumn(name="user_id"))
-	private Collection<User> user = new ArrayList<User>();*/
-	
 	@JsonBackReference
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "group", cascade = CascadeType.ALL)
 	private Set<User> user = new HashSet<User>();
+
+	@JsonBackReference
+	@OneToOne(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+	private UserGroup userGroup;
+
+	public UserGroup getUserGroup() {
+		return userGroup;
+	}
+
+	public void setUserGroup(UserGroup userGroup) {
+		this.userGroup = userGroup;
+	}
 
 	public Group(String name) {
 		super();

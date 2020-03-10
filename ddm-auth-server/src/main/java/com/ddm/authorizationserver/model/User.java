@@ -14,11 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -54,15 +52,17 @@ public class User implements Serializable {
                     @JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles;
 	
+	@JsonManagedReference
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="profile_id", referencedColumnName = "id")
 	private ProfileDetails profileDetail;
 
 	@JsonManagedReference
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "group_id")
 	private Group group;
-
+	
+	
 	public User() { }
 
     public User(User user) {

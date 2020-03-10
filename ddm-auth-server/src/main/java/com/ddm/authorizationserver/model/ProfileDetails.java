@@ -9,9 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name="USER_PROFILE")
@@ -34,22 +35,11 @@ public class ProfileDetails implements Serializable{
     private String mobile;
     @Column(name="entity_type")
     private String entityType;
-	@OneToOne(mappedBy = "profileDetail")
+    @JsonBackReference
+	@OneToOne(mappedBy = "profileDetail", cascade = CascadeType.ALL, orphanRemoval = true)
 	private User user;
 	
-	/*@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name="entity_type", referencedColumnName = "id")
-    private EntityUserType entityType;*/
 	public ProfileDetails() {}
-	
-	/*public ProfileDetails(String fullName, String occupation, String pan, LocalDate dob, String mobile) {
-		super();
-		this.fullName = fullName;
-		this.occupation = occupation;
-		this.pan = pan;
-		this.dob = dob;
-		this.mobile = mobile;
-	}*/
 	
 	public ProfileDetails(String fullName, String occupation, String pan, LocalDate dob, String mobile, String entityType) {
 		super();

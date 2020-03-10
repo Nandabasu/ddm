@@ -26,6 +26,7 @@ import com.ddm.authorizationserver.model.Group;
 import com.ddm.authorizationserver.model.ProfileDetails;
 import com.ddm.authorizationserver.model.Role;
 import com.ddm.authorizationserver.model.User;
+import com.ddm.authorizationserver.model.UserGroup;
 import com.ddm.authorizationserver.payload.ApiResponse;
 import com.ddm.authorizationserver.payload.CommonUserInfo;
 import com.ddm.authorizationserver.payload.ProfileCreation;
@@ -34,6 +35,7 @@ import com.ddm.authorizationserver.payload.UserRegistrationRequestPayload;
 import com.ddm.authorizationserver.repository.GroupRepository;
 import com.ddm.authorizationserver.repository.RoleRepository;
 import com.ddm.authorizationserver.repository.UserDetailRepository;
+import com.ddm.authorizationserver.repository.UserGroupRepository;
 
 @RestController
 @RequestMapping(value ="/api/v1/")
@@ -45,18 +47,19 @@ public class UserProfileController {
 	ProfileServiceImpl profileService;*/
 	
 	@Autowired
-	UserDetailRepository userRepository;
+	private UserDetailRepository userRepository;
 	
     @Autowired
     private PasswordEncoder passwordEncoder;
     
     @Autowired
-	GroupRepository groupRepository;
+	private GroupRepository groupRepository;
 	
 	@Autowired
-	RoleRepository roleRepository;
+	private RoleRepository roleRepository;
 	
-    
+    @Autowired
+    private UserGroupRepository  userGroupRepository;
     
     @GetMapping("/secured")
 //    @Secured("MASTER_ADMIN")
@@ -160,14 +163,13 @@ public class UserProfileController {
 				userInfo.getMobile(), profile.getEntityType());
 		User currentUser = userRepository.findByUsername(principal.getUsername()).get();
 		User user = new User(userInfo.getUserName(), passwordEncoder.encode(userInfo.getPassword()), userInfo.getEmail(), roles, profileDetail, currentUser.getGroup());
+		
 		User result = userRepository.save(user);
-		
-		/*Group group = new Group(userInfo.getFullName());
-		Set<User> userList = result.getGroup().getUser();
-		userList.add(result);
-		group.setUser(userList);
-		groupRepository.save(group);*/
-		
+		UserGroup userGroup = new UserGroup();
+		userGroup.setUsername(principal.getUsername());
+		userGroup.getUsers().add(result);		
+		userGroup.setGroup(currentUser.getGroup());
+		userGroupRepository.save(userGroup);
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/group")
 				.buildAndExpand(result).toUri();
 		return ResponseEntity.created(location).body(new ApiResponse(true, "User successfully created"));
