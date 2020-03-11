@@ -1,18 +1,15 @@
-/*package com.ddm.authorizationserver.model;
+package com.ddm.authorizationserver.model;
 
 import javax.persistence.Column;
-import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @MappedSuperclass
 @JsonIgnoreProperties(value= {"createdBy", "updatedBy"}, allowGetters=true)
-@EntityListeners(AuditingEntityListener.class)
 public abstract class UserDateAudit extends DateAudit{
 
 	private static final long serialVersionUID = 1L;
@@ -41,4 +38,3 @@ public abstract class UserDateAudit extends DateAudit{
 	}
 	
 }
-*/

@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -23,13 +22,13 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name = "user")
 //@Data
-public class User implements Serializable {
+public class User extends UserDateAudit implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private long id;
     @Column(name = "username")
     private String username;
     @Column(name = "password")
@@ -52,6 +51,10 @@ public class User implements Serializable {
                     @JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles;
 	
+	public Long getId() {
+		return id;
+	}
+
 	@JsonManagedReference
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="profile_id", referencedColumnName = "id")

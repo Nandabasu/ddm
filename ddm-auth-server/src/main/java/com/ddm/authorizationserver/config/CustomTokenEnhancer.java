@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import com.ddm.authorizationserver.model.Group;
+import com.ddm.authorizationserver.model.Permission;
 import com.ddm.authorizationserver.model.Role;
 import com.ddm.authorizationserver.model.User;
 import com.ddm.authorizationserver.model.UserGroup;
@@ -47,7 +48,7 @@ public class CustomTokenEnhancer extends JwtAccessTokenConverter{
 		
 //		boolean master_admin = currentUser.getRoles().stream().anyMatch(role -> role.getName().contains("MASTER_ADMIN"));
 //		boolean group_admin = currentUser.getRoles().stream().anyMatch(role -> role.getName().contains("GROUP_ADMIN"));
-	//	boolean role_user = currentUser.getRoles().stream().anyMatch(role -> role.getName().contains("USER"));
+//		boolean role_user = currentUser.getRoles().stream().anyMatch(role -> role.getName().contains("USER"));
 //		boolean entity_user = currentUser.getRoles().stream().anyMatch(role -> role.getName().contains("ENTITY_USER"));
 		boolean master_admin = false;
 		boolean group_admin = false;
@@ -68,7 +69,17 @@ public class CustomTokenEnhancer extends JwtAccessTokenConverter{
 					groupMap.put(group.getName(), ug);
 				}
 			}
+//			List<Role> roles = roleRepository.findAll();
+//			roles.stream().filter(role -> role.getPermissions()).collect(Collectors.toList());
+			/*Map<String, List<Permission>> rolePrevilagesMap = new HashMap<String, List<Permission>>();
+			List<Permission> previllages = new ArrayList<Permission>();
+			for(Role role: currentUser.getRoles()) {
+				rolePrevilagesMap.put(role.getName(), role.getPermissions());
+//				previllages.addAll(role.getPermissions());
+			}
+			info.put("roles & previllages", rolePrevilagesMap);*/
 			info.put("groups", groupMap);
+			
 		}
 
 		if(group_admin) {

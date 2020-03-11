@@ -1,4 +1,4 @@
-/*package com.ddm.authorizationserver.model;
+package com.ddm.authorizationserver.model;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -48,4 +48,3 @@ public abstract class DateAudit implements Serializable {
 	}
 
 }
-*/
