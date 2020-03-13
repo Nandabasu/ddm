@@ -22,7 +22,7 @@ insert into permission_role (permission_id, role_id) values(9, 1);
 
 INSERT INTO USER_PROFILE(ID, DOB,ENTITY_TYPE,fullname ,MOBILE, OCCUPATION,PAN) VALUES(1, '1988-12-12', null ,'Dheeraj Kumar', '9900123450','CA','AQPPN8980Q');
 
-INSERT INTO USER(ID, accountNonExpired, accountNonLocked, credentialsNonExpired, email, enabled, password, username, group_id, profile_id) values(1,1,1,1,'dheeraj@gmail.com',1,'{bcrypt}$2a$10$aw/b/806Qm9pE7Rx4x6TxuuJkn4.qi/rTXZ2Xdd/SV5x6HXKPp4uO','dheeraj', null ,'1');
+INSERT INTO USER(ID,createdAt,updatedAt, accountNonExpired, accountNonLocked, credentialsNonExpired, email, enabled, password, username, group_id, profile_id) values(1,NOW(),Now(),1,1,1,'dheeraj@gmail.com',1,'{bcrypt}$2a$10$aw/b/806Qm9pE7Rx4x6TxuuJkn4.qi/rTXZ2Xdd/SV5x6HXKPp4uO','dheeraj', null ,'1');
 
 
 INSERT INTO `ddm_dev5`.`role_user` (`user_id`, `role_id`) VALUES ('1', '1');
