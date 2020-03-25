@@ -5,12 +5,10 @@ import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.ddm.authorizationserver.model.Group;
+import com.ddm.authorizationserver.model.Permission;
 
 @Repository
 @Transactional
-public interface GroupRepository extends JpaRepository<Group, Long>{
-
-	boolean existsByName(String groupName);
+public interface PermissionRepository extends JpaRepository<Permission, Long>{
 
 }

@@ -1,7 +1,9 @@
 package com.ddm.authorizationserver.model;
 
 import java.io.Serializable;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,102 +16,143 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity
-@Table(name = "user")
-//@Data
+@Table(name = "USER")
 public class User extends UserDateAudit implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-    @Column(name = "username")
-    private String username;
-    @Column(name = "password")
-    private String password;
-    @Column(name = "email")
-    private String email;    
-    @Column(name = "enabled", columnDefinition = "tinyint(4) default '1'" )
-    private boolean enabled;
-    @Column(name = "accountNonExpired", columnDefinition = "tinyint(4) default '1'")
-    private boolean accountNonExpired;
-    @Column(name = "credentialsNonExpired", columnDefinition = "tinyint(4) default '1'")
-    private boolean credentialsNonExpired;
-    @Column(name = "accountNonLocked", columnDefinition = "tinyint(4) default '1'")
-    private boolean accountNonLocked;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
 
-//    @LazyCollection(LazyCollectionOption.FALSE)
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "role_user", joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {
-                    @JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private List<Role> roles;
+	@Column(name = "username")
+	private String username;
 	
-	public Long getId() {
-		return id;
-	}
+	@Column(name = "password")
+	private String password;
+	
+	@Column(name = "email")
+	private String email;
+		
+	@Column(name = "fullname")
+	private String fullName;
+	
+	@Column(name = "occupation")
+	private String occupation;
+	
+	@Column(name = "pan")
+	private String pan;
+	
+	@Column(name = "dob")
+	private LocalDate dob;
+	
+	@Column(name = "mobile")
+	private String mobile;
+	
+	@Column(name = "entity_type")
+	private String entityType;
 
-	@JsonManagedReference
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="profile_id", referencedColumnName = "id")
-	private ProfileDetails profileDetail;
+	@Column(name = "enabled", columnDefinition = "tinyint(4) default '1'")
+	private boolean enabled;
+	
+	@Column(name = "accountNonExpired", columnDefinition = "tinyint(4) default '1'")
+	private boolean accountNonExpired;
+		
+	@Column(name = "credentialsNonExpired", columnDefinition = "tinyint(4) default '1'")
+	private boolean credentialsNonExpired;
+	
+	@Column(name = "accountNonLocked", columnDefinition = "tinyint(4) default '1'")
+	private boolean accountNonLocked;
 
-	@JsonManagedReference
+	@Column(name = "isEntityUser")
+	private boolean isEntityUser;
+	
+	
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "role_user", 
+			   joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") }, 
+			   inverseJoinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "id") })
+	private Set<Role> roles = new HashSet<Role>();
+
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "group_id")
+	@JoinColumn(name = "groupId")
 	private Group group;
 	
+	/*@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "accessedBy", insertable = false, updatable = false)
+	private Group accessedBy;*/
 	
+	@ManyToOne
+    @JoinColumn(name = "ENTITY_ID")
+    private EntityUser entityUser;
+	
+	/*@ManyToOne
+    @JoinColumn(name = "userGroupId")
+    private UserGroup userGroup;*/
+	
+	/*public UserGroup getUserGroup() {
+		return userGroup;
+	}
+
+	public void setUserGroup(UserGroup userGroup) {
+		this.userGroup = userGroup;
+	}*/
+
+	public EntityUser getEntityUser() {
+		return entityUser;
+	}
+
+	public void setEntityUser(EntityUser entityUser) {
+		this.entityUser = entityUser;
+	}
+
 	public User() { }
-
-    public User(User user) {
-        this.username = user.getUsername();
-        this.password = user.getPassword();
-        this.email = user.getEmail();
-        this.enabled = user.isEnabled();
-        this.accountNonExpired = user.isAccountNonExpired();
-        this.credentialsNonExpired = user.isCredentialsNonExpired();
-        this.accountNonLocked = user.isAccountNonLocked();
-        this.roles = user.getRoles();
-    }
-
-	public User(String username, String password, String email, List<Role> roles, ProfileDetails profileDetail,
+			
+	public User(User user) {
+		this.username = user.getUsername();
+		this.password = user.getPassword();
+		this.email = user.getEmail();
+		this.enabled = user.isEnabled();
+		this.accountNonExpired = user.isAccountNonExpired();
+		this.credentialsNonExpired = user.isCredentialsNonExpired();
+		this.accountNonLocked = user.isAccountNonLocked();
+		this.roles = user.getRoles();
+	}
+	
+	public User(String username, String password, String email, String fullName, String occupation, String pan,
+			LocalDate dob, String mobile, String entityType, boolean enabled, boolean accountNonExpired,
+			boolean credentialsNonExpired, boolean accountNonLocked, boolean isEntityUser, Set<Role> roles,
 			Group group) {
 		super();
 		this.username = username;
 		this.password = password;
 		this.email = email;
+		this.fullName = fullName;
+		this.occupation = occupation;
+		this.pan = pan;
+		this.dob = dob;
+		this.mobile = mobile;
+		this.entityType = entityType;
+		this.enabled = enabled;
+		this.accountNonExpired = accountNonExpired;
+		this.credentialsNonExpired = credentialsNonExpired;
+		this.accountNonLocked = accountNonLocked;
+		this.isEntityUser = isEntityUser;
 		this.roles = roles;
-		this.profileDetail = profileDetail;
 		this.group = group;
 	}
 
-	public ProfileDetails getProfileDetail() {
-		return profileDetail;
+	public long getId() {
+		return id;
 	}
-
-	public void setProfileDetail(ProfileDetails profileDetail) {
-		this.profileDetail = profileDetail;
-	}
-
-	public Group getGroup() {
-		return group;
-	}
-
-	public void setGroup(Group group) {
-		this.group = group;
-	}
-
+	
 	public String getUsername() {
 		return username;
 	}
-
+	
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -117,7 +160,7 @@ public class User extends UserDateAudit implements Serializable {
 	public String getPassword() {
 		return password;
 	}
-
+	
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -129,15 +172,15 @@ public class User extends UserDateAudit implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
+	
 	public boolean isEnabled() {
 		return enabled;
 	}
-
+	
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
-
+	
 	public boolean isAccountNonExpired() {
 		return accountNonExpired;
 	}
@@ -145,7 +188,7 @@ public class User extends UserDateAudit implements Serializable {
 	public void setAccountNonExpired(boolean accountNonExpired) {
 		this.accountNonExpired = accountNonExpired;
 	}
-
+	
 	public boolean isCredentialsNonExpired() {
 		return credentialsNonExpired;
 	}
@@ -153,7 +196,7 @@ public class User extends UserDateAudit implements Serializable {
 	public void setCredentialsNonExpired(boolean credentialsNonExpired) {
 		this.credentialsNonExpired = credentialsNonExpired;
 	}
-
+	
 	public boolean isAccountNonLocked() {
 		return accountNonLocked;
 	}
@@ -162,12 +205,75 @@ public class User extends UserDateAudit implements Serializable {
 		this.accountNonLocked = accountNonLocked;
 	}
 
-	public List<Role> getRoles() {
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getOccupation() {
+		return occupation;
+	}
+
+	public void setOccupation(String occupation) {
+		this.occupation = occupation;
+	}
+
+	public String getPan() {
+		return pan;
+	}
+
+	public void setPan(String pan) {
+		this.pan = pan;
+	}
+
+	public LocalDate getDob() {
+		return dob;
+	}
+
+	public void setDob(LocalDate dob) {
+		this.dob = dob;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+	
+	public String getEntityType() {
+		return entityType;
+	}
+	
+	public void setEntityType(String entityType) {
+		this.entityType = entityType;
+	}
+
+	public Set<Role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Role> roles) {
+	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
 
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
+	public boolean isEntityUser() {
+		return isEntityUser;
+	}
+
+	public void setEntityUser(boolean isEntityUser) {
+		this.isEntityUser = isEntityUser;
+	}
 }

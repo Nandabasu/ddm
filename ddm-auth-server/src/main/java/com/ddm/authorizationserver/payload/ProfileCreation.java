@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -33,7 +32,6 @@ public class ProfileCreation {
 	@Pattern(regexp="([A-Z]){5}([0-9]){4}([A-Z]){1}", message="Please enter valid PAN card number")
 	private String pan;	
 	
-	@NotNull(message= "Date of birth cannot be blank")
 	private LocalDate dob;	
 	
 	@NotBlank(message = "Mobile number cannot be blank")
@@ -42,6 +40,16 @@ public class ProfileCreation {
 
 	private List<String> roles;
 	
+	private String entityType;
+	
+	public String getEntityType() {
+		return entityType;
+	}
+
+	public void setEntityType(String entityType) {
+		this.entityType = entityType;
+	}
+
 	public List<String> getRoles() {
 		return roles;
 	}

@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/ddm?createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/digital_ddm?createDatabaseIfNotExist=true
     username: root
-    password: password
+    password: usha
     driver-class-name: com.mysql.jdbc.Driver
     initialization-mode: always
   jpa:
@@ -13,12 +13,12 @@ spring:
       use-new-id-generator-mappings: false
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-      ddl-auto: update
+##      ddl-auto: create
     properties:
       hibernate:           
         show_sql: true
         format_sql: true
-      
+        enable_lazy_load_no_trans: true
         
   application:
     name: ddm-auth-service

@@ -1,5 +1,6 @@
 package com.ddm.authorizationserver.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -11,9 +12,8 @@ import com.ddm.authorizationserver.model.User;
 
 @Repository
 @Transactional
-public interface UserDetailRepository extends JpaRepository<User,Integer> {
+public interface UserDetailRepository extends JpaRepository<User,Long> {
 
-	
     Optional<User> findByUsername(String name);
 
 	Optional<User> findByEmail(String email);
@@ -22,5 +22,15 @@ public interface UserDetailRepository extends JpaRepository<User,Integer> {
 
     Boolean existsByEmail(String email);
 
+    Boolean existsByPan(String pan);
+ 
+    Boolean existsByMobile(String mobile);
     
+    Optional<User> findByMobile(String mobile);
+    
+    Optional<User> findByPan(String pan);
+    
+    List<User> findAll();
+    
+    Optional<User> findById(long id);
 }

@@ -1,17 +1,45 @@
 package com.ddm.authorizationserver.util;
 
+import java.time.LocalDate;
+
 public class UserBasicInfo {
 
 	private String username;
 	private String fullName;
 	private String email;
 	private String mobile;
-	
 	private String groupName;
+	private String pan;
+	private String occupation;
+	private LocalDate dob;
+
+	public UserBasicInfo() {}
 	
-	public UserBasicInfo(String groupName) {
+	public UserBasicInfo(String username, String fullName, String email, String mobile, String groupName, String pan,
+			String occupation, LocalDate dob) {
 		super();
+		this.username = username;
+		this.fullName = fullName;
+		this.email = email;
+		this.mobile = mobile;
 		this.groupName = groupName;
+		this.pan = pan;
+		this.occupation = occupation;
+		this.dob = dob;
+	}
+
+
+	public String getOccupation() {
+		return occupation;
+	}
+	public void setOccupation(String occupation) {
+		this.occupation = occupation;
+	}
+	public LocalDate getDob() {
+		return dob;
+	}
+	public void setDob(LocalDate dob) {
+		this.dob = dob;
 	}
 	public String getGroupName() {
 		return groupName;
@@ -19,13 +47,7 @@ public class UserBasicInfo {
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
-	public UserBasicInfo(String username, String fullName, String email, String mobile) {
-		super();
-		this.username = username;
-		this.fullName = fullName;
-		this.email = email;
-		this.mobile = mobile;
-	}
+	
 	public String getFullName() {
 		return fullName;
 	}
@@ -49,6 +71,13 @@ public class UserBasicInfo {
 	}
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+	
+	public String getPan() {
+		return pan;
+	}
+	public void setPan(String pan) {
+		this.pan = pan;
 	}
 	@Override
 	public String toString() {

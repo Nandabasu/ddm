@@ -2,6 +2,7 @@ package com.ddm.authorizationserver.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -14,29 +15,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.ddm.authorizationserver.model.EntityUserProfileCreation;
+import com.ddm.authorizationserver.model.EntityUser;
 import com.ddm.authorizationserver.model.Group;
-import com.ddm.authorizationserver.model.ProfileDetails;
 import com.ddm.authorizationserver.model.Role;
 import com.ddm.authorizationserver.model.User;
-import com.ddm.authorizationserver.model.UserGroup;
 import com.ddm.authorizationserver.payload.ApiResponse;
+import com.ddm.authorizationserver.payload.EntityUserAccessPayload;
 import com.ddm.authorizationserver.payload.ProfileCreation;
+import com.ddm.authorizationserver.repository.EntityUserRepository;
 import com.ddm.authorizationserver.repository.GroupRepository;
 import com.ddm.authorizationserver.repository.RoleRepository;
 import com.ddm.authorizationserver.repository.UserDetailRepository;
-import com.ddm.authorizationserver.repository.UserGroupRepository;
 
 @RestController
-@RequestMapping(value ="/api/v1/")
+@RequestMapping(value ="/api/v1/profile")
 public class UserProfileController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserProfileController.class);
@@ -52,98 +53,128 @@ public class UserProfileController {
 	
 	@Autowired
 	private RoleRepository roleRepository;
-	
-    @Autowired
-    private UserGroupRepository  userGroupRepository;
 
+	@Autowired
+	private EntityUserRepository entityUserRepo;
+	
+	@GetMapping(value = "/")
+	public List<User> getAllUsers(){
+		return userRepository.findAll();
+	}
 	/**
 	 * method to create group_admin, this is be only be allowed for Master Admin role
 	 * @return
 	 */
-	@PostMapping("/user/")
-	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
+	@PostMapping("/create")
+	@PreAuthorize("hasAuthority('MASTER_ADMIN') or hasAuthority('GROUP_ADMIN') or hasAuthority('USER')")
 	public ResponseEntity<?> createGroupAdmin(@Valid @RequestBody ProfileCreation profile) {
 		logger.info("create user by Master Admin.... createGroupAdmin()");
-		if(userRepository.existsByEmail(profile.getEmail()) || userRepository.existsByUsername(profile.getUserName())) {
+		if(userRepository.existsByEmail(profile.getEmail()) || userRepository.existsByUsername(profile.getUserName())
+			|| userRepository.existsByPan(profile.getPan()) || userRepository.existsByMobile(profile.getMobile())) {
 			return new ResponseEntity<>(new ApiResponse(false, "User already exists"), HttpStatus.BAD_REQUEST);
 		}
-		
-		List<Role> roles = roleRepository.findByName(profile.getRoles());
-		
-		ProfileDetails profileDetail = new ProfileDetails(profile.getFullName(),profile.getOccupation() , profile.getPan(), profile.getDob(), profile.getMobile(), null);
-		Group group = new Group(profile.getFullName());
-		Group groupResult = groupRepository.save(group);
-		
-		User user = new User(profile.getUserName(), passwordEncoder.encode(profile.getPassword()), profile.getEmail(), roles, profileDetail, groupResult);
-		User result = userRepository.save(user);
-
-		Set<User> userList = result.getGroup().getUser();
-		userList.add(result);
-		groupResult.setUser(userList);
-		groupRepository.save(groupResult);
-		
-		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/group")
-				.buildAndExpand(result).toUri();
-
-		return ResponseEntity.created(location).body(new ApiResponse(true, "User successfully created"));
-	}
-	
-	@PostMapping("/user/groupuser/")
-	@PreAuthorize("hasAuthority('GROUP_ADMIN')")
-	public ResponseEntity<?> createUser(@Valid @RequestBody ProfileCreation profile) {
-		if(userRepository.existsByEmail(profile.getEmail()) || userRepository.existsByUsername(profile.getUserName())) {
-			return new ResponseEntity<>(new ApiResponse(false, "User already exists"), HttpStatus.BAD_REQUEST);
-		}
-		// This should be replaced to annotation to get current user
-		User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		List<Role> roles = roleRepository.findByName(profile.getRoles());
+		User principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();		
+		Set<Role> roles = roleRepository.findByName(profile.getRoles());
 		User currentUser = userRepository.findByUsername(principal.getUsername()).get();
-		
-		ProfileDetails profileDetail = new ProfileDetails(profile.getFullName(), profile.getOccupation(), profile.getPan(), profile.getDob(), profile.getMobile(), null);
-		User user = new User(profile.getUserName(), passwordEncoder.encode(profile.getPassword()), profile.getEmail(), roles, profileDetail, currentUser.getGroup());
-		User result  =  userRepository.save(user);
+		User user = null;
+		User result = null;
+		EntityUser entityUser = null;
+		if(principal.getRoles().stream().anyMatch(role -> "MASTER_ADMIN".equalsIgnoreCase(role.getName()))) {
+			Group group = new Group(profile.getUserName(), profile.getFullName().concat(profile.getUserName()));
+			Group groupResult = groupRepository.save(group);
+			user = new User(profile.getUserName(), passwordEncoder.encode(profile.getPassword()), profile.getEmail(), profile.getFullName(),
+					profile.getOccupation(), profile.getPan(), profile.getDob(), profile.getMobile(), null, true, true,
+					true, true, false, roles, groupResult);	
 
-		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/group")
-				.buildAndExpand(result).toUri();
-
-		return ResponseEntity.created(location).body(new ApiResponse(true, "User successfully created"));
-	}
-
-	@PostMapping("/user/entityuser/")
-	@PreAuthorize("hasAuthority('USER') or hasAuthority('GROUP_ADMIN')")
-	public ResponseEntity<?> createEntityUser(@Valid @RequestBody EntityUserProfileCreation profile) {
-		if(userRepository.existsByEmail(profile.getEmail()) || userRepository.existsByUsername(profile.getUserName())) {
-			return new ResponseEntity<>(new ApiResponse(false, "User already exists"), HttpStatus.BAD_REQUEST);
+			result = userRepository.save(user);
 		}
-		User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		List<Role> roles = roleRepository.findByName(profile.getRoles());
-		ProfileDetails profileDetail = new ProfileDetails(profile.getFullName(),profile.getOccupation() , profile.getPan(), profile.getDob(), 
-				profile.getMobile(), profile.getEntityType());
-		User currentUser = userRepository.findByUsername(principal.getUsername()).get();
-		User user = new User(profile.getUserName(), passwordEncoder.encode(profile.getPassword()), profile.getEmail(), roles, profileDetail, currentUser.getGroup());
-		
-		User result = userRepository.save(user);
-		UserGroup userGroup = new UserGroup();
-		userGroup.setUsername(principal.getUsername());
-		userGroup.getUsers().add(result);		
-		userGroup.setGroup(currentUser.getGroup());
-		userGroupRepository.save(userGroup);
-		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/group")
+
+		if(principal.getRoles().stream().anyMatch(role -> "GROUP_ADMIN".equalsIgnoreCase(role.getName()))) {
+			user = new User(profile.getUserName(), passwordEncoder.encode(profile.getPassword()), profile.getEmail(), profile.getFullName(),
+					profile.getOccupation(), profile.getPan(), profile.getDob(), profile.getMobile(), null, true, true,
+					true, true, false, roles, currentUser.getGroup());	
+			
+			result = userRepository.save(user);
+			EntityUser eUser = new EntityUser(user.getId(), null);
+			entityUserRepo.save(eUser);
+		}
+
+		if (principal.getRoles().stream().anyMatch(role -> "USER".equalsIgnoreCase(role.getName()))) {
+			user = new User(profile.getUserName(), passwordEncoder.encode(profile.getPassword()), profile.getEmail(),
+					profile.getFullName(), profile.getOccupation(), profile.getPan(), profile.getDob(),
+					profile.getMobile(), profile.getEntityType(), true, true, true, true, false, roles,
+					currentUser.getGroup());
+			user.setEntityUser(true);
+			Optional<EntityUser> optionalEntityUser = entityUserRepo.findByEntityUserId(currentUser.getId());
+			if(optionalEntityUser.isPresent()) {
+				user.setEntityUser(optionalEntityUser.get());
+			}else {
+				entityUser = new EntityUser(currentUser.getId(), null);
+				entityUserRepo.save(entityUser);
+				user.setEntityUser(entityUser);
+			}
+			result = userRepository.save(user);
+			
+		}		
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/")
 				.buildAndExpand(result).toUri();
+
 		return ResponseEntity.created(location).body(new ApiResponse(true, "User successfully created"));
 	}
+
 	
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<?> getUserById(@PathVariable long id){
+		User result = null;
+		if(!userRepository.existsById(id)) {
+				return new ResponseEntity<>(new ApiResponse(false, "User does not exists"), HttpStatus.BAD_REQUEST);
+			}
+		Optional<User> optionalUser = userRepository.findById(id);
+		if(optionalUser.isPresent()) {
+			result = optionalUser.get();
+		}
+		
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/")
+				.buildAndExpand(result).toUri();
+
+		return ResponseEntity.created(location).body(new ApiResponse(true, "User found"));
+	}
+
+	@DeleteMapping(value = "/{id}")
+	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
+	public ResponseEntity<?> deleteUserById(@PathVariable long id){
+		if(!userRepository.existsById(id)) {
+			return new ResponseEntity<>(new ApiResponse(false, "User does not exists"), HttpStatus.BAD_REQUEST);
+		}
+		userRepository.deleteById(id);
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/")
+				.buildAndExpand("deleted").toUri();
+
+		return ResponseEntity.created(location).body(new ApiResponse(true, "User deleted successfully"));
+	}
 	/**
-	 * method to update password
-	 * @param password
+	 * TO-DO complete 
+	 * method to assign entity user to another user  
+	 * @param profile
 	 * @return
 	 */
-	@GetMapping("/updatePass")
-	public @ResponseBody User updatePassword(String password){
+	@PostMapping(value="/assignUser")
+	@PreAuthorize("hasAuthority('GROUP_ADMIN')")
+	public ResponseEntity<?> assignEntityUser(@Valid @RequestBody EntityUserAccessPayload userAccessPayload) {
 		
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User entityUser = userRepository.findById(userAccessPayload.getEntityUserId()).get();
+		User groupUser = userRepository.findById(userAccessPayload.getUserId()).get();		
 		
-		user.setPassword(passwordEncoder.encode(password));
-		return userRepository.save(user);
+		User result = null;
+
+		groupUser.setEntityUser(entityUser.getEntityUser());
+		result = userRepository.save(groupUser);
+		
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/")
+				.buildAndExpand(result).toUri();
+
+		return ResponseEntity.created(location).body(new ApiResponse(true, "User assigned successfully"));
 	}
+
+	
 }
