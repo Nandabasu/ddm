@@ -134,7 +134,7 @@ public class UserProfileController {
 		if (!userRepository.existsById(id)) {
 			return new ResponseEntity<>(new ApiResponse(false, "User does not exists"), HttpStatus.BAD_REQUEST);
 		}
-		Optional<EntityUser> optinalEntityUser = entityUserRepo.findByEntityUserId(id);
+		Optional<EntityUser> optinalEntityUser = entityUserRepo.findByEntityUserId(id) ;
 		
 		if (optinalEntityUser.isPresent()) {
 			userEntity = optinalEntityUser.get().getUserList();
