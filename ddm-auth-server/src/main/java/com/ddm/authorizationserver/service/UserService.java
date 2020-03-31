@@ -20,7 +20,6 @@ public class UserService {
 	}
 
 	
-	
 	public List<UserResponse> buildUserReponse(List<User> userEntityList) {
 		List<UserResponse> userResponseList=new ArrayList<>();
 		for(User userEntity:userEntityList) {

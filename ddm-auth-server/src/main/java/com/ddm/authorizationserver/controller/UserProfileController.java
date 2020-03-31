@@ -1,7 +1,6 @@
 package com.ddm.authorizationserver.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -27,7 +26,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ddm.authorizationserver.model.EntityUser;
 import com.ddm.authorizationserver.model.Group;
-import com.ddm.authorizationserver.model.Permission;
 import com.ddm.authorizationserver.model.Role;
 import com.ddm.authorizationserver.model.User;
 import com.ddm.authorizationserver.payload.ApiResponse;
@@ -37,7 +35,6 @@ import com.ddm.authorizationserver.repository.EntityUserRepository;
 import com.ddm.authorizationserver.repository.GroupRepository;
 import com.ddm.authorizationserver.repository.RoleRepository;
 import com.ddm.authorizationserver.repository.UserDetailRepository;
-import com.ddm.authorizationserver.response.GroupResponse;
 import com.ddm.authorizationserver.response.UserResponse;
 import com.ddm.authorizationserver.service.UserService;
 
@@ -133,14 +130,15 @@ public class UserProfileController {
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?> getUserById(@PathVariable long id) {
-		User userEntity = null;
+		List<User> userEntity = null;
 		if (!userRepository.existsById(id)) {
 			return new ResponseEntity<>(new ApiResponse(false, "User does not exists"), HttpStatus.BAD_REQUEST);
 		}
-		Optional<User> optionalUser = userRepository.findById(id);
-		if (optionalUser.isPresent()) {
-			userEntity = optionalUser.get();
-			UserResponse userResponse = userService.buildUserReponse(userEntity);
+		Optional<EntityUser> optinalEntityUser = entityUserRepo.findByEntityUserId(id);
+		
+		if (optinalEntityUser.isPresent()) {
+			userEntity = optinalEntityUser.get().getUserList();
+			List<UserResponse> userResponse = userService.buildUserReponse(userEntity);
 			return ResponseEntity.ok().body(userResponse);
 		} else {
 			return new ResponseEntity<>(new ApiResponse(false, "User does not exists"), HttpStatus.BAD_REQUEST);
