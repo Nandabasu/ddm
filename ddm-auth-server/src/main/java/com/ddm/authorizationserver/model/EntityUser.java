@@ -28,7 +28,7 @@ public class EntityUser extends UserDateAudit implements Serializable{
 	private long entityUserId;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "entityUser", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "entityUser", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<User> userList;
 	
 	public EntityUser() {}
@@ -38,6 +38,12 @@ public class EntityUser extends UserDateAudit implements Serializable{
 		this.entityUserId = entityUserId;
 		this.userList = userList;
 	}
+	
+	
+	public long getId() {
+		return id;
+	}
+
 	public List<User> getUserList() {
 		return userList;
 	}

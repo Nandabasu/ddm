@@ -34,7 +34,10 @@ public class Group extends UserDateAudit implements Serializable{
 	private String description;
 	
 	@JsonIgnore //to-avoid circular dependency
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "group", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, 
+			   mappedBy = "group", 
+			   cascade = CascadeType.ALL, 
+			   orphanRemoval = true)
 	private Set<User> user = new HashSet<User>();
 
 	/*@OneToMany(fetch = FetchType.EAGER, mappedBy = "accessedBy", cascade = CascadeType.ALL)

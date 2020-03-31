@@ -70,22 +70,21 @@ public class User extends UserDateAudit implements Serializable {
 	@Column(name = "isEntityUser")
 	private boolean isEntityUser;
 	
-	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "role_user", 
 			   joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") }, 
 			   inverseJoinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "id") })
 	private Set<Role> roles = new HashSet<Role>();
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "groupId")
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@JoinColumn(name = "groupId", nullable = false)
 	private Group group;
 	
 	/*@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "accessedBy", insertable = false, updatable = false)
 	private Group accessedBy;*/
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "ENTITY_ID")
     private EntityUser entityUser;
 	

@@ -14,4 +14,6 @@ import com.ddm.authorizationserver.model.EntityUser;
 public interface EntityUserRepository extends JpaRepository<EntityUser, Long> {
 
 	Optional<EntityUser> findByEntityUserId(long userId);
+	
+	void deleteByEntityUserId(long id);
 }

@@ -1,9 +1,11 @@
 package com.ddm.authorizationserver.controller;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -86,6 +88,10 @@ public class UserProfileController {
 		User result = null;
 		EntityUser entityUser = null;
 		if(principal.getRoles().stream().anyMatch(role -> "MASTER_ADMIN".equalsIgnoreCase(role.getName()))) {
+			
+			if(groupRepository.existsByName(profile.getUserName())) {
+				return new ResponseEntity<>(new ApiResponse(false, "Group already exists"), HttpStatus.BAD_REQUEST);
+			}
 			Group group = new Group(profile.getUserName(), profile.getFullName().concat(profile.getUserName()));
 			Group groupResult = groupRepository.save(group);
 			user = new User(profile.getUserName(), passwordEncoder.encode(profile.getPassword()), profile.getEmail(), profile.getFullName(),
@@ -145,13 +151,48 @@ public class UserProfileController {
 		}
 	}
 
-	@DeleteMapping(value = "/{id}")
+	@DeleteMapping(value = "/user/{id}")
 	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
 	public ResponseEntity<?> deleteUserById(@PathVariable long id){
 		if(!userRepository.existsById(id)) {
 			return new ResponseEntity<>(new ApiResponse(false, "User does not exists"), HttpStatus.BAD_REQUEST);
 		}
+		User userObj = userRepository.findById(id).get();
+		boolean user = userObj.getRoles().stream().anyMatch(role -> "USER".equalsIgnoreCase(role.getName()));
+		if(user) {
+			EntityUser entityUser =  entityUserRepo.findByEntityUserId(userObj.getId()).get();
+			
+			entityUserRepo.deleteById(entityUser.getId());
+			userRepository.deleteById(id);
+		}
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/")
+				.buildAndExpand("deleted").toUri();
+
+		return ResponseEntity.created(location).body(new ApiResponse(true, "User deleted successfully"));
+	}
+	
+	/*@DeleteMapping(value = "/user/{id}")
+	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
+	public ResponseEntity<?> deleteEntityUserById(@PathVariable long id){
+		if(!userRepository.existsById(id)) {
+			return new ResponseEntity<>(new ApiResponse(false, "User does not exists"), HttpStatus.BAD_REQUEST);
+		}
 		userRepository.deleteById(id);
+//		entityUserRepo.deleteById(id);
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/")
+				.buildAndExpand("deleted").toUri();
+
+		return ResponseEntity.created(location).body(new ApiResponse(true, "User deleted successfully"));
+	}*/
+	
+	@DeleteMapping(value = "/groupuser/{id}")
+	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
+	public ResponseEntity<?> deleteUserById1(@PathVariable long id){
+		if(!userRepository.existsById(id)) {
+			return new ResponseEntity<>(new ApiResponse(false, "User does not exists"), HttpStatus.BAD_REQUEST);
+		}
+		userRepository.deleteById(id);
+	//	entityUserRepo.deleteById(id);
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/")
 				.buildAndExpand("deleted").toUri();
 

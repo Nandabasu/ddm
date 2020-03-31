@@ -34,7 +34,7 @@ public class Role extends UserDateAudit implements Serializable {
 
 	/*@JsonManagedReference
 	@LazyCollection(LazyCollectionOption.FALSE)*/
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "permission_role", joinColumns = {
             @JoinColumn(name = "role_id", referencedColumnName = "id")}, inverseJoinColumns = {
             @JoinColumn(name = "permission_id", referencedColumnName = "id")})
