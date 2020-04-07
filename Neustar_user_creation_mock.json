@@ -1,0 +1,37 @@
+// Neustar Users
+[{
+		"userName": "Peter",
+		"password": "password",
+		"email": "peter@neustar.com",
+		"fullName": "Neustar Technologies Pvt Ltd",
+		"occupation": "Software Services",
+		"pan": "AQPPN2222C",
+		"dob": "2000-12-12",
+		"mobile": "9844022221",
+		"entityType":"FAMILY",
+		"roles": ["USER"]
+},
+{
+		"userName": "John",
+		"password": "password",
+		"email": "john@neustar.com",
+		"fullName": "Neustar Technologies Pvt Ltd",
+		"occupation": "Software Services",
+		"pan": "AQPPN2245C",
+		"dob": "2000-12-12",
+		"mobile": "9844022223",
+		"entityType":"FAMILY",
+		"roles": ["USER"]
+},
+{
+		"userName": "James",
+		"password": "password",
+		"email": "james@neustar.com",
+		"fullName": "Neustar Technologies Pvt Ltd",
+		"occupation": "Software Services",
+		"pan": "AQPPN1235C",
+		"dob": "2000-12-12",
+		"mobile": "9844012383",
+		"entityType":"FAMILY",
+		"roles": ["USER"]
+}]

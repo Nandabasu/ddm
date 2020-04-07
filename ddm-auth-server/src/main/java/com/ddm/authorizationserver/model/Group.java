@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -34,15 +35,13 @@ public class Group extends UserDateAudit implements Serializable{
 	private String description;
 	
 	@JsonIgnore //to-avoid circular dependency
+	@JsonManagedReference
 	@OneToMany(fetch = FetchType.LAZY, 
 			   mappedBy = "group", 
 			   cascade = CascadeType.ALL, 
 			   orphanRemoval = true)
 	private Set<User> user = new HashSet<User>();
 
-	/*@OneToMany(fetch = FetchType.EAGER, mappedBy = "accessedBy", cascade = CascadeType.ALL)
-	private Set<User> accessedBy = new HashSet<User>();*/
-	
 	public Group(String name, String description) {
 		super();
 		this.name = name;
@@ -54,7 +53,8 @@ public class Group extends UserDateAudit implements Serializable{
 	public long getId() {
 		return id;
 	}
-
+	
+	@JsonIgnore
 	public Set<User> getUser() {
 		return user;
 	}
@@ -79,12 +79,9 @@ public class Group extends UserDateAudit implements Serializable{
 		this.name = name;
 	}
 
-	/*public Set<User> getAccessedBy() {
-		return accessedBy;
+	@Override
+	public String toString() {
+		return "Group [id=" + id + ", name=" + name + ", description=" + description + ", user=" + user + "]";
 	}
 
-	public void setAccessedBy(Set<User> accessedBy) {
-		this.accessedBy = accessedBy;
-	}*/
-	
 }

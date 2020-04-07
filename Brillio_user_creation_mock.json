@@ -1,0 +1,37 @@
+[
+{
+    "userName": "Raghu",
+    "password": "password",
+    "email": "raghu@brillio.com",
+    "fullName": "Brillio Technologies Pvt Ltd",
+    "occupation": "Software Services",
+    "pan": "AQPPN1234B",
+    "dob": "2000-12-12",
+    "mobile": "9844012346",
+    "entityType":"FAMILY",
+    "roles": ["USER"]
+},
+{
+    "userName": "Anusha",
+    "password": "password",
+    "email": "anusha@brillio.com",
+    "fullName": "Brillio Technologies Pvt Ltd",
+    "occupation": "Software Services",
+    "pan": "AQPPN1111C",
+    "dob": "2000-12-12",
+    "mobile": "9844011113",
+    "entityType":"FAMILY",
+    "roles": ["USER"]
+},
+{
+    "userName": "Kenny",
+    "password": "password",
+    "email": "kenny@brillio.com",
+    "fullName": "Brillio Technologies Pvt Ltd",
+    "occupation": "Software Services",
+    "pan": "AQPPN1111D",
+    "dob": "2000-12-12",
+    "mobile": "9844011114",
+    "entityType":"FAMILY",
+    "roles": ["USER"]
+}]

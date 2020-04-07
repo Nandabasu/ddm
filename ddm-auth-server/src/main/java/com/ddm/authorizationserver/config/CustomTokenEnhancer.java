@@ -20,7 +20,8 @@ import com.ddm.authorizationserver.repository.EntityUserRepository;
 import com.ddm.authorizationserver.repository.GroupRepository;
 import com.ddm.authorizationserver.repository.RoleRepository;
 import com.ddm.authorizationserver.repository.UserDetailRepository;
-import com.ddm.authorizationserver.util.UserBasicInfo;
+import com.ddm.authorizationserver.response.UserResponse;
+import com.ddm.authorizationserver.service.UserService;
 
 public class CustomTokenEnhancer extends JwtAccessTokenConverter{
 
@@ -36,16 +37,20 @@ public class CustomTokenEnhancer extends JwtAccessTokenConverter{
 	@Autowired
 	private EntityUserRepository entityUserRepo;
 	
+	@Autowired
+	UserService userService;
+	
 	@Override
 	public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
 		Map<String, Object> info = new LinkedHashMap<String, Object>(accessToken.getAdditionalInformation());
 		User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = userRepo.findByUsername(principal.getUsername()).get();
-		UserBasicInfo profile;
+		UserResponse profile;
 		boolean masterAdmin = principal.getRoles().stream().anyMatch(role -> "MASTER_ADMIN".equalsIgnoreCase(role.getName()));
 		boolean groupAdmin = principal.getRoles().stream().anyMatch(role -> "GROUP_ADMIN".equalsIgnoreCase(role.getName()));
 		boolean groupUser = principal.getRoles().stream().anyMatch(role -> "USER".equalsIgnoreCase(role.getName()));
 		boolean entityUser = principal.getRoles().stream().anyMatch(role -> "ENTITY_USER".equalsIgnoreCase(role.getName()));
+		// Change user info to user builder
 		if(masterAdmin) {
 			List<Role> roles = roleRepo.findAll();
 			List<Group> groups = groupRepository.findAll();
@@ -59,7 +64,7 @@ public class CustomTokenEnhancer extends JwtAccessTokenConverter{
 			info.put("users", user.getGroup().getUser().stream().map(u -> u.getUsername()).collect(Collectors.toList()));
 		}
 		if(groupUser) {
-			info.put("group_name", user.getGroup().getName());
+			 info.put("group_name", user.getGroup().getName());
 			 EntityUser eUser = entityUserRepo.findByEntityUserId(user.getId()).get();
 			 List<String> entityUsers = eUser.getUserList().stream().map(eu -> eu.getUsername()).collect(Collectors.toList());
 			info.put("entityUser",entityUsers);
@@ -68,10 +73,11 @@ public class CustomTokenEnhancer extends JwtAccessTokenConverter{
 			info.put("group_name", user.getGroup().getName());			
 		}
 		if(masterAdmin) {
-			profile = new UserBasicInfo(user.getUsername(), user.getFullName(), user.getEmail(), user.getMobile(), null, user.getPan(), user.getOccupation(), user.getDob());
+			profile = userService.buildUserReponse(user);
+//			profile = new UserBasicInfo(user.getUsername(), user.getFullName(), user.getEmail(), user.getMobile(), null, user.getPan(), user.getOccupation(), user.getDob());
 		}
 		else{
-			profile = new UserBasicInfo(user.getUsername(), user.getFullName(), user.getEmail(), user.getMobile(), user.getGroup().getName(), user.getPan(), user.getOccupation(), user.getDob());
+			profile = userService.buildUserReponse(user);
 		}
 		info.put("profile",profile);
 		DefaultOAuth2AccessToken customAccessToken = new DefaultOAuth2AccessToken(accessToken);

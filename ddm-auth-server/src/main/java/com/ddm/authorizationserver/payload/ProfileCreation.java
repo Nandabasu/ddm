@@ -8,8 +8,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class ProfileCreation {
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+public class ProfileCreation {
+	
+	@JsonIgnore
+	private long id;
+	
 	@NotBlank(message="User name cannot be blank")
 	private String userName;
 	
@@ -41,7 +46,15 @@ public class ProfileCreation {
 	private List<String> roles;
 	
 	private String entityType;
-	
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public String getEntityType() {
 		return entityType;
 	}

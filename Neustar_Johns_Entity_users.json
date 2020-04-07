@@ -1,0 +1,39 @@
+[
+//John's Entity users
+{
+		"userName": "Turgut",
+		"password": "password",
+		"email": "turgut@neustar.com",
+		"fullName": "Neustar Technologies Pvt Ltd",
+		"occupation": "Software Services",
+		"pan": "AQPPN3321C",
+		"dob": "2000-12-12",
+		"mobile": "9844098083",
+		"entityType":"FAMILY",
+		"roles": ["ENTITY_USER"]
+},
+{
+		"userName": "Bill",
+		"password": "password",
+		"email": "bill@neustar.com",
+		"fullName": "Neustar Technologies Pvt Ltd",
+		"occupation": "Software Services",
+		"pan": "AQPPN3366D",
+		"dob": "2000-12-12",
+		"mobile": "9844098443",
+		"entityType":"FAMILY",
+		"roles": ["ENTITY_USER"]
+},
+{
+		"userName": "Trump",
+		"password": "password",
+		"email": "trump@neustar.com",
+		"fullName": "Neustar Technologies Pvt Ltd",
+		"occupation": "Software Services",
+		"pan": "AQPPN3388D",
+		"dob": "2000-12-12",
+		"mobile": "9844001443",
+		"entityType":"FAMILY",
+		"roles": ["ENTITY_USER"]
+}
+]

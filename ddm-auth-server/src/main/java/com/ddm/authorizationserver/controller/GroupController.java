@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.ddm.authorizationserver.exception.ResourceNotFoundException;
 import com.ddm.authorizationserver.model.Group;
 import com.ddm.authorizationserver.payload.ApiResponse;
 import com.ddm.authorizationserver.payload.GroupPayload;
@@ -33,13 +34,13 @@ public class GroupController {
 	
 	@GetMapping("/")
 	@ResponseBody
-//	@PreAuthorize("hasAuthority('MASTER_ADMIN') or hasAuthority('GROUP_ADMIN')")
+	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
 	public List<Group> getAllGroups(){
 		return	groupRepository.findAll();
 	}
 	
 	@GetMapping(value = "/{id}")
-//	@PreAuthorize("hasAuthority('MASTER_ADMIN') or hasAuthority('GROUP_ADMIN')")
+	@PreAuthorize("hasAuthority('MASTER_ADMIN') or hasAuthority('GROUP_ADMIN')")
 	public ResponseEntity<?> getGroupById(@PathVariable long id){
 		
 		if(!groupRepository.existsById(id)) {
@@ -62,6 +63,7 @@ public class GroupController {
 		}
 		
 		Group groupObj = new Group(group.getName(), group.getDescription());
+
 		Group result  = groupRepository.save(groupObj);
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/groups")
 				.buildAndExpand(result).toUri();
@@ -70,20 +72,29 @@ public class GroupController {
 	}
 	
 	@PostMapping("/update")
-	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
-	public ResponseEntity<?> updateGroup(@Valid @RequestBody GroupPayload group) {
+	@PreAuthorize("hasAuthority('MASTER_ADMIN') or hasAuthority('GROUP_ADMIN')")
+	public Group updateGroup(@Valid @RequestBody GroupPayload group) {
 	
-		if(!groupRepository.existsById(group.getId())) {
+		/*if(!groupRepository.existsById(group.getId())) {
 			return new ResponseEntity<>(new ApiResponse(false, "Group does not exists"), HttpStatus.BAD_REQUEST);
-		}
-		Group groupResult = groupRepository.findById(group.getId()).get();
+		}*/
+/*		Group groupResult = groupRepository.findById(group.getId()).get();
 		groupResult.setName(group.getName());
 		groupResult.setDescription(group.getDescription());
-		Group result  = groupRepository.save(groupResult);
-		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/groups")
+		groupResult.setUser(groupResult.getUser());
+		Group result  = groupRepository.save(groupResult);*/
+		
+        return groupRepository.findById(group.getId()).map(group1 -> {
+            group1.setName(group.getName());
+            group1.setDescription(group.getDescription());
+            return groupRepository.save(group1);
+        }).orElseThrow(() -> new ResourceNotFoundException("Group ID " + group.getId() + "not found"));
+		
+		
+/*		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/groups")
 				.buildAndExpand(result).toUri();
 
-		return ResponseEntity.created(location).body(new ApiResponse(true, "Group Updated Successfully"));
+		return ResponseEntity.created(location).body(new ApiResponse(true, "Group Updated Successfully"));*/
 	}
 	
 	@DeleteMapping(value = "/{id}")

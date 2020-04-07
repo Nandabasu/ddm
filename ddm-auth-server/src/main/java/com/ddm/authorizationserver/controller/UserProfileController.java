@@ -1,11 +1,9 @@
 package com.ddm.authorizationserver.controller;
 
 import java.net.URI;
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -65,6 +64,7 @@ public class UserProfileController {
 	private UserService userService;
 
 	@GetMapping(value = "/")
+	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
 	public List<UserResponse> getAllUsers() {
 		List<User> userEntityList=userRepository.findAll();
 		return userService.buildUserReponse(userEntityList);
@@ -134,20 +134,32 @@ public class UserProfileController {
 		return ResponseEntity.created(location).body(new ApiResponse(true, "User successfully created"));
 	}
 
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "/user/{id}")
+	@PreAuthorize("hasAuthority('MASTER_ADMIN') or hasAuthority('GROUP_ADMIN')")
 	public ResponseEntity<?> getUserById(@PathVariable long id) {
-		List<User> userEntity = null;
 		if (!userRepository.existsById(id)) {
 			return new ResponseEntity<>(new ApiResponse(false, "User does not exists"), HttpStatus.BAD_REQUEST);
-		}
-		Optional<EntityUser> optinalEntityUser = entityUserRepo.findByEntityUserId(id) ;
-		
-		if (optinalEntityUser.isPresent()) {
-			userEntity = optinalEntityUser.get().getUserList();
-			List<UserResponse> userResponse = userService.buildUserReponse(userEntity);
-			return ResponseEntity.ok().body(userResponse);
-		} else {
+		}		
+		User user = userRepository.findById(id).get();
+		UserResponse userResponse = userService.buildUserReponse(user);
+		return ResponseEntity.ok().body(userResponse);
+	}
+	
+	@GetMapping(value = "/user/{id}/entity")
+	public ResponseEntity<?> getEntityUsersById(@PathVariable long id) {
+	if (!userRepository.existsById(id)) {
 			return new ResponseEntity<>(new ApiResponse(false, "User does not exists"), HttpStatus.BAD_REQUEST);
+		}
+	
+		if(!userRepository.findById(id).get().isEntityUser()) {
+			Optional<EntityUser> optinalEntityUser = entityUserRepo.findByEntityUserId(id);
+			if (optinalEntityUser.isPresent()) {
+				return ResponseEntity.ok().body(userService.buildUserReponse(optinalEntityUser.get().getUserList()));
+			} else {
+				return new ResponseEntity<>(new ApiResponse(false, "Not having any entity users AON"), HttpStatus.BAD_REQUEST);
+			}
+		}else {
+			return new ResponseEntity<>(new ApiResponse(false, "User is entity user"), HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -159,45 +171,37 @@ public class UserProfileController {
 		}
 		User userObj = userRepository.findById(id).get();
 		boolean user = userObj.getRoles().stream().anyMatch(role -> "USER".equalsIgnoreCase(role.getName()));
+		boolean entity_user = userObj.getRoles().stream().anyMatch(role -> "ENTITY_USER".equalsIgnoreCase(role.getName()));
 		if(user) {
 			EntityUser entityUser =  entityUserRepo.findByEntityUserId(userObj.getId()).get();
 			
 			entityUserRepo.deleteById(entityUser.getId());
 			userRepository.deleteById(id);
 		}
+		else if(entity_user) {
+			userRepository.deleteById(id);
+		}
+		else {
+			return new ResponseEntity<>(new ApiResponse(false, "Cannot delete this user please check with Admin"), HttpStatus.BAD_REQUEST);
+		}
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/")
 				.buildAndExpand("deleted").toUri();
 
 		return ResponseEntity.created(location).body(new ApiResponse(true, "User deleted successfully"));
 	}
 	
-	/*@DeleteMapping(value = "/user/{id}")
+	@PutMapping(value = "/user")
 	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
-	public ResponseEntity<?> deleteEntityUserById(@PathVariable long id){
-		if(!userRepository.existsById(id)) {
-			return new ResponseEntity<>(new ApiResponse(false, "User does not exists"), HttpStatus.BAD_REQUEST);
-		}
-		userRepository.deleteById(id);
-//		entityUserRepo.deleteById(id);
-		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/")
-				.buildAndExpand("deleted").toUri();
-
-		return ResponseEntity.created(location).body(new ApiResponse(true, "User deleted successfully"));
-	}*/
-	
-	@DeleteMapping(value = "/groupuser/{id}")
-	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
-	public ResponseEntity<?> deleteUserById1(@PathVariable long id){
-		if(!userRepository.existsById(id)) {
-			return new ResponseEntity<>(new ApiResponse(false, "User does not exists"), HttpStatus.BAD_REQUEST);
-		}
-		userRepository.deleteById(id);
-	//	entityUserRepo.deleteById(id);
+	public ResponseEntity<?> updateUser(@Valid @RequestBody ProfileCreation profile){
+		
+		
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/")
 				.buildAndExpand("deleted").toUri();
 
 		return ResponseEntity.created(location).body(new ApiResponse(true, "User deleted successfully"));
 	}
+	
+
 	/**
 	 * TO-DO complete
 	 * method to assign entity user to another user

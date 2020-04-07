@@ -1,0 +1,37 @@
+// Brillio - Kenny's entity users
+[{
+		"userName": "Amogh",
+		"password": "password",
+		"email": "amogh@brillio.com",
+		"fullName": "Amogh",
+		"occupation": "Software Services",
+		"pan": "AQPPN3433E",
+		"dob": "2000-12-12",
+		"mobile": "9844018922",
+		"entityType":"FAMILY",
+		"roles": ["ENTITY_USER"]
+},
+{
+		"userName": "Mallu",
+		"password": "password",
+		"email": "mallu@brillio.com",
+		"fullName": "Mallu",
+		"occupation": "Software Services",
+		"pan": "AQPPN3433Y",
+		"dob": "2000-12-12",
+		"mobile": "9844018322",
+		"entityType":"FAMILY",
+		"roles": ["ENTITY_USER"]
+},
+{
+		"userName": "Nikitha",
+		"password": "password",
+		"email": "nikitha@brillio.com",
+		"fullName": "Nikitha",
+		"occupation": "Software Services",
+		"pan": "AQPPN3433P",
+		"dob": "2000-12-12",
+		"mobile": "9844013967",
+		"entityType":"FAMILY",
+		"roles": ["ENTITY_USER"]
+}]

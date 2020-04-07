@@ -11,6 +11,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @MappedSuperclass
@@ -34,11 +35,13 @@ public abstract class DateAudit implements Serializable {
 	public Instant getCreatedAt() {
 		return createdAt;
 	}
-
+	
+	@JsonIgnore
 	public void setCreatedAt(Instant createdAt) {
 		this.createdAt = createdAt;
 	}
-
+	
+	@JsonIgnore
 	public Instant getUpdatedAt() {
 		return updatedAt;
 	}

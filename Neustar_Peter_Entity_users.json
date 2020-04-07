@@ -1,0 +1,39 @@
+[
+    //Peter
+{
+		"userName": "Petrick",
+		"password": "password",
+		"email": "petrick@neustar.com",
+		"fullName": "Neustar Technologies Pvt Ltd",
+		"occupation": "Software Services",
+		"pan": "AQPPN1490C",
+		"dob": "2000-12-12",
+		"mobile": "9844013383",
+		"entityType":"FAMILY",
+		"roles": ["ENTITY_USER"]
+},
+{
+		"userName": "Jacob",
+		"password": "password",
+		"email": "jacob@neustar.com",
+		"fullName": "Neustar Technologies Pvt Ltd",
+		"occupation": "Software Services",
+		"pan": "AQPPN1477C",
+		"dob": "2000-12-12",
+		"mobile": "9844019083",
+		"entityType":"FAMILY",
+		"roles": ["ENTITY_USER"]
+},
+{
+		"userName": "Elango",
+		"password": "password",
+		"email": "elango@neustar.com",
+		"fullName": "Neustar Technologies Pvt Ltd",
+		"occupation": "Software Services",
+		"pan": "AQPPN1009C",
+		"dob": "2000-12-12",
+		"mobile": "9844077083",
+		"entityType":"FAMILY",
+		"roles": ["ENTITY_USER"]
+}
+]

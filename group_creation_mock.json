@@ -1,0 +1,27 @@
+
+[
+    {
+		"userName": "Brillio",
+		"password": "password",
+		"email": "admin@brillio.com",
+		"fullName": "Brillio Technologies Pvt Ltd",
+		"occupation": "Software Services",
+		"pan": "AQPPN1111A",
+		"dob": "2000-12-12",
+		"mobile": "9844011111",
+		"entityType":"FAMILY",
+		"roles": ["GROUP_ADMIN"]
+},
+{
+    "userName": "Neustar",
+    "password": "password",
+    "email": "admin@neustar.com",
+    "fullName": "Neustar Technologies Pvt Ltd",
+    "occupation": "Software Services",
+    "pan": "AQPPN2222B",
+    "dob": "2000-12-12",
+    "mobile": "9844022222",
+    "entityType":"FAMILY",
+    "roles": ["GROUP_ADMIN"]
+}        
+]

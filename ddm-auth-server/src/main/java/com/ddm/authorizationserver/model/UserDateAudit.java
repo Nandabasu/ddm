@@ -6,6 +6,7 @@ import javax.persistence.MappedSuperclass;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @MappedSuperclass
@@ -24,7 +25,8 @@ public abstract class UserDateAudit extends DateAudit{
 	public Long getCreatedBy() {
 		return createdBy;
 	}
-
+	
+	@JsonIgnore
 	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
 	}
@@ -33,6 +35,7 @@ public abstract class UserDateAudit extends DateAudit{
 		return updatedBy;
 	}
 
+	@JsonIgnore
 	public void setUpdatedBy(Long updatedBy) {
 		this.updatedBy = updatedBy;
 	}
