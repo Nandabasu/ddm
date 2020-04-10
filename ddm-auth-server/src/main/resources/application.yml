@@ -1,11 +1,13 @@
 server:
   port: 9191
+  servlet:
+     context-path: /ddm/api/
 
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/digital_ddm?createDatabaseIfNotExist=true
     username: root
-    password: usha
+    password: test
     driver-class-name: com.mysql.jdbc.Driver
     initialization-mode: always
   jpa:
