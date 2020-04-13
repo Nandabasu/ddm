@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -71,30 +72,14 @@ public class GroupController {
 		return ResponseEntity.created(location).body(new ApiResponse(true, "Group Created Successfully"));
 	}
 	
-	@PostMapping("/update")
-	@PreAuthorize("hasAuthority('MASTER_ADMIN') or hasAuthority('GROUP_ADMIN')")
+	@PutMapping("/update")
+	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
 	public Group updateGroup(@Valid @RequestBody GroupPayload group) {
-	
-		/*if(!groupRepository.existsById(group.getId())) {
-			return new ResponseEntity<>(new ApiResponse(false, "Group does not exists"), HttpStatus.BAD_REQUEST);
-		}*/
-/*		Group groupResult = groupRepository.findById(group.getId()).get();
-		groupResult.setName(group.getName());
-		groupResult.setDescription(group.getDescription());
-		groupResult.setUser(groupResult.getUser());
-		Group result  = groupRepository.save(groupResult);*/
-		
         return groupRepository.findById(group.getId()).map(group1 -> {
             group1.setName(group.getName());
             group1.setDescription(group.getDescription());
             return groupRepository.save(group1);
         }).orElseThrow(() -> new ResourceNotFoundException("Group ID " + group.getId() + "not found"));
-		
-		
-/*		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/groups")
-				.buildAndExpand(result).toUri();
-
-		return ResponseEntity.created(location).body(new ApiResponse(true, "Group Updated Successfully"));*/
 	}
 	
 	@DeleteMapping(value = "/{id}")

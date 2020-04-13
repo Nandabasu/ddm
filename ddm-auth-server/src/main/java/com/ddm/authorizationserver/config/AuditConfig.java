@@ -2,7 +2,6 @@ package com.ddm.authorizationserver.config;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -12,13 +11,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.ddm.authorizationserver.model.AuthUserDetail;
-import com.ddm.authorizationserver.model.User;
-import com.ddm.authorizationserver.repository.UserDetailRepository;
 
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider" )
 public class AuditConfig {
-
 	
  	@Bean
     public AuditorAware<Long> auditorProvider() {
@@ -26,9 +22,6 @@ public class AuditConfig {
     }
 }
 class SpringSecurityAuditAwareImpl implements AuditorAware<Long> {
-
-	@Autowired
-	UserDetailRepository userRepo;
 	
 	@Override
     public Optional<Long> getCurrentAuditor() {
@@ -41,8 +34,6 @@ class SpringSecurityAuditAwareImpl implements AuditorAware<Long> {
         }
 
         AuthUserDetail userPrincipal = (AuthUserDetail) authentication.getPrincipal();
-        User user = userRepo.findByUsername(userPrincipal.getUsername()).get();
-        return Optional.ofNullable(user.getId());
+        return Optional.ofNullable(userPrincipal.getId());
     }
-    
 }
