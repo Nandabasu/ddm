@@ -15,13 +15,16 @@ spring:
       use-new-id-generator-mappings: false
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-##      ddl-auto: update
+      ddl-auto: update
     properties:
       hibernate:           
         show_sql: true
         format_sql: true
         enable_lazy_load_no_trans: true
-        
+  jackson:
+    serialization:
+       fail-on-empty-beans: false 
+
   application:
     name: ddm-auth-service
 

@@ -25,12 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.ddm.authorizationserver.exception.ResourceNotFoundException;
 import com.ddm.authorizationserver.model.EntityUser;
 import com.ddm.authorizationserver.model.Group;
 import com.ddm.authorizationserver.model.Role;
 import com.ddm.authorizationserver.model.User;
 import com.ddm.authorizationserver.payload.ApiResponse;
 import com.ddm.authorizationserver.payload.EntityUserAccessPayload;
+import com.ddm.authorizationserver.payload.ModifyUserPayload;
 import com.ddm.authorizationserver.payload.ProfileCreation;
 import com.ddm.authorizationserver.repository.EntityUserRepository;
 import com.ddm.authorizationserver.repository.GroupRepository;
@@ -191,14 +193,13 @@ public class UserProfileController {
 	}
 	
 	@PutMapping(value = "/user")
-	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
-	public ResponseEntity<?> updateUser(@Valid @RequestBody ProfileCreation profile){
-		
-		
-		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/")
-				.buildAndExpand("deleted").toUri();
-
-		return ResponseEntity.created(location).body(new ApiResponse(true, "User deleted successfully"));
+	public UserResponse updateUser(@Valid @RequestBody ModifyUserPayload userPayload){
+		logger.info("Update user method:");
+        return userRepository.findById(userPayload.getId()).map(user -> {
+        	user.setOccupation(userPayload.getOccupation());
+            User userResponse = userRepository.save(user);
+            return userService.buildUserReponse(userResponse);
+        }).orElseThrow(() -> new ResourceNotFoundException("User ID " + userPayload.getId() + "not found"));
 	}
 	
 
