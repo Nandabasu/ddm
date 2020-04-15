@@ -5,6 +5,7 @@ import java.util.List;
 
 public class UserResponse {
 
+	private long id;
 	private String userName;
 	private String email;
 	private String fullName;
@@ -17,6 +18,7 @@ public class UserResponse {
 	private GroupResponse group;
 
 	public static class UserResponseBuilder {
+		private long id;
 		private String userName;
 		private String email;
 		private String fullName;
@@ -29,9 +31,10 @@ public class UserResponse {
 //		private String entityType;
 		private GroupResponse group;
 
-		public UserResponseBuilder(String userName, String email, String fullName, String occupation, String pan,
-				LocalDate dob, String mobile, List<String> roles, List<String> permissions) {
+		public UserResponseBuilder(long id, String userName, String email, String fullName, String occupation,
+				String pan, LocalDate dob, String mobile, List<String> roles, List<String> permissions) {
 			super();
+			this.id = id;
 			this.userName = userName;
 			this.email = email;
 			this.fullName = fullName;
@@ -45,10 +48,10 @@ public class UserResponse {
 		}
 
 		public UserResponseBuilder setGroup(GroupResponse group) {
-            this.group = group;
-            return this;
-        }
-		
+			this.group = group;
+			return this;
+		}
+
 		public UserResponse build() {
 			return new UserResponse(this);
 		}
@@ -56,7 +59,7 @@ public class UserResponse {
 	}
 
 	public UserResponse(UserResponseBuilder builder) {
-
+		this.id = builder.id;
 		this.userName = builder.userName;
 		this.email = builder.email;
 		this.fullName = builder.fullName;
@@ -67,7 +70,7 @@ public class UserResponse {
 		this.group = builder.group;
 		this.roles = builder.roles;
 		this.permissions = builder.permissions;
-	//	this.entityType = builder.entityType;
+		// this.entityType = builder.entityType;
 	}
 
 	public String getUserName() {
@@ -105,8 +108,13 @@ public class UserResponse {
 	public List<String> getPermissions() {
 		return permissions;
 	}
+
 	public GroupResponse getGroup() {
 		return group;
+	}
+
+	public long getId() {
+		return id;
 	}
 
 	@Override

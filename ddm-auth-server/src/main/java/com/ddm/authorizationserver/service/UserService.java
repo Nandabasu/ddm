@@ -32,23 +32,24 @@ public class UserService {
 
 	public List<EntityResponse> buildEntityResponse(List<Entities> entities) {
 		List<EntityResponse> entityResponse = new ArrayList<EntityResponse>();
-		for( Entities entity: entities) {
+		for (Entities entity : entities) {
 			EntitiesUserResponse user = buildFinalEntityResponse(entity.getUser());
 			entityResponse.add(new EntityResponse(entity.getId(), entity.getName(), entity.getType(), user));
 		}
 		return entityResponse;
 	}
-	
+
 	public EntityResponse buildEntityResponse(Entities entity) {
-			EntitiesUserResponse user = buildFinalEntityResponse(entity.getUser());
-			return new EntityResponse(entity.getId(), entity.getName(), entity.getType(), user);
+		EntitiesUserResponse user = buildFinalEntityResponse(entity.getUser());
+		return new EntityResponse(entity.getId(), entity.getName(), entity.getType(), user);
 	}
-	
+
 	public EntitiesUserResponse buildFinalEntityResponse(User user) {
-		EntitiesUserResponse eUserResponse = new EntitiesUserResponse(user.getUsername(), user.getEmail(), user.getFullName(), user.getOccupation());
+		EntitiesUserResponse eUserResponse = new EntitiesUserResponse(user.getUsername(), user.getEmail(),
+				user.getFullName(), user.getOccupation());
 		return eUserResponse;
 	}
-	
+
 	public List<UserResponse> buildUserReponse(List<User> userEntityList) {
 		List<UserResponse> userResponseList = new ArrayList<>();
 		for (User userEntity : userEntityList) {
@@ -72,10 +73,9 @@ public class UserService {
 			groupResponse = new GroupResponse.GroupResponseBuilder(userEntity.getGroup().getId(),
 					userEntity.getGroup().getName(), userEntity.getGroup().getDescription()).build();
 		}
-		UserResponse userResponse = new UserResponse.UserResponseBuilder(userEntity.getUsername(),
+		UserResponse userResponse = new UserResponse.UserResponseBuilder(userEntity.getId(), userEntity.getUsername(),
 				userEntity.getEmail(), userEntity.getFullName(), userEntity.getOccupation(), userEntity.getPan(),
-				userEntity.getDob(), userEntity.getMobile(), roles, permissions)
-						.setGroup(groupResponse).build();
+				userEntity.getDob(), userEntity.getMobile(), roles, permissions).setGroup(groupResponse).build();
 		return userResponse;
 	}
 
@@ -100,4 +100,30 @@ public class UserService {
 		User currentUser = userRepository.findByUsername(principal.getUsername()).get();
 		return currentUser;
 	}
+
+	public List<UserResponse> getAllUsersByGroupId(long groupId) {
+		List<User> userEntities = userRepository.getAllUsersByGroupId(groupId);
+		return buildUserReponse(userEntities);
+	}
+
+	public List<UserResponse> getAllUsersByGroupAdminId(long groupAdminId) throws RecordNotFoundException {
+		Optional<User> userEntity = userRepository.findById(groupAdminId);
+
+		if (userEntity.isPresent()) {
+			long groupId = userEntity.get().getGroup().getId();
+			return getAllUsersByGroupId(groupId);
+
+		} else {
+			throw new RecordNotFoundException("Group admin does not exist!");
+		}
+	}
+
+	/*
+	 * public UserResponse getEntityById(long id) throws RecordNotFoundException {
+	 * Optional<User> userEntity = userRepository.getEntityById(id);
+	 * 
+	 * if (userEntity.isPresent()) { System.out.println("sari"); return
+	 * buildUserReponse(userEntity.get()); } else { throw new
+	 * RecordNotFoundException("Entity does not exist!"); } }
+	 */
 }

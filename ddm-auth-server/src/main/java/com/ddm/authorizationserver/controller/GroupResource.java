@@ -24,7 +24,9 @@ import com.ddm.authorizationserver.payload.ApiResponse;
 import com.ddm.authorizationserver.payload.GroupPayload;
 import com.ddm.authorizationserver.repository.GroupRepository;
 import com.ddm.authorizationserver.response.GroupResponse;
+import com.ddm.authorizationserver.response.UserResponse;
 import com.ddm.authorizationserver.service.GroupService;
+import com.ddm.authorizationserver.service.UserService;
 
 @RequestMapping("v1/groups")
 @RestController
@@ -35,6 +37,9 @@ public class GroupResource {
 
 	@Autowired
 	GroupService groupService;
+	
+	@Autowired
+	UserService userService;
 
 	@PostMapping
 	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
@@ -98,4 +103,17 @@ public class GroupResource {
 		groupRepository.deleteById(id);
 		return ResponseEntity.ok().body(new ApiResponse(true, "Group Deleted Successfully"));
 	}
+	
+	@GetMapping(value = "/{id}/users")
+	@PreAuthorize("hasAuthority('MASTER_ADMIN') or hasAuthority('GROUP_ADMIN')")
+	public ResponseEntity<?> getAllUsersByGroupId(@PathVariable long id) {
+
+		if (!groupRepository.existsById(id)) {
+			return new ResponseEntity<>(new ApiResponse(false, "Group does not exists"), HttpStatus.BAD_REQUEST);
+		}
+		
+		List<UserResponse> userResponseList=userService.getAllUsersByGroupId(id);
+		return new ResponseEntity<List<UserResponse>>(userResponseList, new HttpHeaders(), HttpStatus.OK);
+	}
+
 }
