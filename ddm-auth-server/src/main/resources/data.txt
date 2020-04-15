@@ -1,6 +1,4 @@
-INSERT INTO oauth_client_details (client_id, client_secret, web_server_redirect_uri, scope, access_token_validity, refresh_token_validity, resource_ids, authorized_grant_types, additional_information) VALUES ('mobile', '{bcrypt}$2a$10$gPhlXZfms0EpNHX0.HHptOhoFD1AoxSr/yUIdTqA8vtjeP4zi0DDu', 'http://localhost:8080/code', 'READ,WRITE', '3600', '10000', 'inventory,payment', 'authorization_code,password,refresh_token,implicit', '{}');
-
-
+INSERT INTO oauth_client_details (client_id, client_secret, web_server_redirect_uri, scope, access_token_validity, refresh_token_validity, resource_ids, authorized_grant_types, additional_information) VALUES ('mobile', '{bcrypt}$2a$10$gPhlXZfms0EpNHX0.HHptOhoFD1AoxSr/yUIdTqA8vtjeP4zi0DDu', 'http://localhost:8080/code', 'READ,WRITE', '3600', '10000', 'inventory,payment,DDM', 'authorization_code,password,refresh_token,implicit', '{}');
 
 INSERT INTO `permission`
 (`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`name`)
@@ -20,11 +18,11 @@ VALUES(4,NOW(),NOW(),1,1,'UPDATE_USER');
 
 INSERT INTO `permission`
 (`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`name`)
-VALUES(5,NOW(),NOW(),1,1,'CREATE_ENTITY_USER');
+VALUES(5,NOW(),NOW(),1,1,'CREATE_ENTITY');
 
 INSERT INTO `permission`
 (`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`name`)
-VALUES(6,NOW(),NOW(),1,1,'UPDATE_ENTITY_USER');
+VALUES(6,NOW(),NOW(),1,1,'UPDATE_ENTITY');
 
 INSERT INTO `permission`
 (`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`name`)
@@ -33,6 +31,10 @@ VALUES(7,NOW(),NOW(),1,1,'UPLOAD_DOCUMENT');
 INSERT INTO `permission`
 (`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`name`)
 VALUES(8,NOW(),NOW(),1,1,'DOWNLOAD_DOCUMENT');
+
+INSERT INTO `permission`
+(`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`name`)
+VALUES(9,NOW(),NOW(),1,1,'DELETE_DOCUMENT');
 
 INSERT INTO `role`(`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`name`)
 VALUES(1,NOW(),NOW(),1,1,'MASTER_ADMIN');
@@ -43,9 +45,6 @@ VALUES(2,NOW(),NOW(),1,1,'GROUP_ADMIN');
 INSERT INTO `role`(`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`name`)
 VALUES(3,NOW(),NOW(),1,1,'USER');
 
-INSERT INTO `role`(`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`name`)
-VALUES(4,NOW(),NOW(),1,1,'ENTITY_USER');
-
 insert into permission_role (permission_id, role_id) values(1, 1);
 insert into permission_role (permission_id, role_id) values(2, 1);
 insert into permission_role (permission_id, role_id) values(7, 1);
@@ -54,9 +53,15 @@ insert into permission_role (permission_id, role_id) values(9, 1);
 
 INSERT INTO  `role_user` (`user_id`, `role_id`) VALUES ('1', '1');
 
-INSERT INTO `user`
-(`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`accountNonExpired`,`accountNonLocked`,`credentialsNonExpired`,`dob`,
-`email`,`enabled`,`entity_type`,`fullname`,`isEntityUser`,`mobile`,`occupation`,`pan`,`password`,`username`,`groupId`)
+INSERT INTO `digital_ddm`.`ddm_group`
+(`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`description`,`group_name`)
 VALUES
-(1,NOW(),NOW(),1,1,1,1,1,'1988-10-10','dheeraj@gmail.com',1,null,'Dheeraj Kumar',0,'9844906886','Charted Accountant','AQPPN7890Q',
-'{bcrypt}$2a$10$.q8IPa3pjvj9r2kUbyBG4eExC2ElwhAwlV9xQo5DMABGvx/lt3.JS','dheeraj',null);
+(1,NOW(),NOW(),1,1,'MASTER ADMIN DUMMY GROUP','MASTER ADMIN GROUP');
+
+INSERT INTO `digital_ddm`.`user`
+(`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`accountNonExpired`,`accountNonLocked`,`credentialsNonExpired`,
+`dob`,`email`,`enabled`,`fullname`,`enterprise_user`,`mobile`,`occupation`,`pan`,`password`,`username`,`groupId`)
+VALUES
+(1,NOW(),NOW(),1,1,1,1,1,
+'1988-10-10','dheeraj@gmail.com',1,'Dheeraj Kumar',0,'9844906886','Charted Accountant','AQPPN9999N','{bcrypt}$2a$10$88q3eW0AbvDmgjO1sepGbeFlYPuaDvVEaDXNsUPf/ar9iffNGFqP6','dheeraj',1);
+

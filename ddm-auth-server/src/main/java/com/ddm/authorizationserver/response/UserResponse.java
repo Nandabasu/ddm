@@ -14,7 +14,6 @@ public class UserResponse {
 	private String mobile;
 	private List<String> roles;
 	private List<String> permissions;
-	private String entityType;
 	private GroupResponse group;
 
 	public static class UserResponseBuilder {
@@ -27,11 +26,11 @@ public class UserResponse {
 		private String mobile;
 		private List<String> roles;
 		private List<String> permissions;
-		private String entityType;
+//		private String entityType;
 		private GroupResponse group;
 
 		public UserResponseBuilder(String userName, String email, String fullName, String occupation, String pan,
-				LocalDate dob, String mobile, List<String> roles, List<String> permissions, String entityType) {
+				LocalDate dob, String mobile, List<String> roles, List<String> permissions) {
 			super();
 			this.userName = userName;
 			this.email = email;
@@ -42,7 +41,7 @@ public class UserResponse {
 			this.mobile = mobile;
 			this.roles = roles;
 			this.permissions = permissions;
-			this.entityType = entityType;
+//			this.entityType = entityType;
 		}
 
 		public UserResponseBuilder setGroup(GroupResponse group) {
@@ -68,7 +67,7 @@ public class UserResponse {
 		this.group = builder.group;
 		this.roles = builder.roles;
 		this.permissions = builder.permissions;
-		this.entityType = builder.entityType;
+	//	this.entityType = builder.entityType;
 	}
 
 	public String getUserName() {
@@ -106,21 +105,15 @@ public class UserResponse {
 	public List<String> getPermissions() {
 		return permissions;
 	}
-
-	public String getEntityType() {
-		return entityType;
-	}
-	
-
 	public GroupResponse getGroup() {
 		return group;
 	}
 
 	@Override
 	public String toString() {
-		return "ProfileCreation [userName=" + userName + ", email=" + email + ", fullName=" + fullName + ", occupation="
+		return "UserResponse [userName=" + userName + ", email=" + email + ", fullName=" + fullName + ", occupation="
 				+ occupation + ", pan=" + pan + ", dob=" + dob + ", mobile=" + mobile + ", roles=" + roles
-				+ ", permissions=" + permissions + ", entityType=" + entityType + "]";
+				+ ", permissions=" + permissions + ", group=" + group + "]";
 	}
 
 }

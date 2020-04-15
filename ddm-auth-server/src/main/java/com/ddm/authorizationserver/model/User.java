@@ -2,7 +2,9 @@ package com.ddm.authorizationserver.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -52,8 +55,8 @@ public class User extends UserDateAudit implements Serializable {
 	@Column(name = "mobile")
 	private String mobile;
 	
-	@Column(name = "entity_type")
-	private String entityType;
+	@Column(name="enterprise_user")
+	private boolean isEnterpriseUser;
 
 	@Column(name = "enabled", columnDefinition = "tinyint(4) default '1'")
 	private boolean enabled;
@@ -66,9 +69,6 @@ public class User extends UserDateAudit implements Serializable {
 	
 	@Column(name = "accountNonLocked", columnDefinition = "tinyint(4) default '1'")
 	private boolean accountNonLocked;
-
-	@Column(name = "isEntityUser")
-	private boolean isEntityUser;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "role_user", 
@@ -80,34 +80,9 @@ public class User extends UserDateAudit implements Serializable {
 	@JoinColumn(name = "groupId", nullable = false)
 	private Group group;
 	
-	/*@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "accessedBy", insertable = false, updatable = false)
-	private Group accessedBy;*/
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+	private List<Entities> entities = new ArrayList<Entities>();
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-    @JoinColumn(name = "ENTITY_ID")
-    private EntityUser entityUser;
-	
-	/*@ManyToOne
-    @JoinColumn(name = "userGroupId")
-    private UserGroup userGroup;*/
-	
-	/*public UserGroup getUserGroup() {
-		return userGroup;
-	}
-
-	public void setUserGroup(UserGroup userGroup) {
-		this.userGroup = userGroup;
-	}*/
-
-	public EntityUser getEntityUser() {
-		return entityUser;
-	}
-
-	public void setEntityUser(EntityUser entityUser) {
-		this.entityUser = entityUser;
-	}
-
 	public User() { }
 			
 	public User(User user) {
@@ -123,8 +98,8 @@ public class User extends UserDateAudit implements Serializable {
 	}
 	
 	public User(String username, String password, String email, String fullName, String occupation, String pan,
-			LocalDate dob, String mobile, String entityType, boolean enabled, boolean accountNonExpired,
-			boolean credentialsNonExpired, boolean accountNonLocked, boolean isEntityUser, Set<Role> roles,
+			LocalDate dob, String mobile, boolean isEnterpriseUser, boolean enabled, boolean accountNonExpired,
+			boolean credentialsNonExpired, boolean accountNonLocked, Set<Role> roles,
 			Group group) {
 		super();
 		this.username = username;
@@ -135,14 +110,17 @@ public class User extends UserDateAudit implements Serializable {
 		this.pan = pan;
 		this.dob = dob;
 		this.mobile = mobile;
-		this.entityType = entityType;
+		this.isEnterpriseUser = isEnterpriseUser;
 		this.enabled = enabled;
 		this.accountNonExpired = accountNonExpired;
 		this.credentialsNonExpired = credentialsNonExpired;
 		this.accountNonLocked = accountNonLocked;
-		this.isEntityUser = isEntityUser;
 		this.roles = roles;
 		this.group = group;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public long getId() {
@@ -244,14 +222,6 @@ public class User extends UserDateAudit implements Serializable {
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
-	
-	public String getEntityType() {
-		return entityType;
-	}
-	
-	public void setEntityType(String entityType) {
-		this.entityType = entityType;
-	}
 
 	public Set<Role> getRoles() {
 		return roles;
@@ -269,11 +239,30 @@ public class User extends UserDateAudit implements Serializable {
 		this.group = group;
 	}
 
-	public boolean isEntityUser() {
-		return isEntityUser;
+	public boolean isEnterpriseUser() {
+		return isEnterpriseUser;
 	}
 
-	public void setEntityUser(boolean isEntityUser) {
-		this.isEntityUser = isEntityUser;
+	public void setEnterpriseUser(boolean isEnterpriseUser) {
+		this.isEnterpriseUser = isEnterpriseUser;
 	}
+
+	public List<Entities> getEntities() {
+		return entities;
+	}
+
+	public void setEntities(List<Entities> entities) {
+		this.entities = entities;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email
+				+ ", fullName=" + fullName + ", occupation=" + occupation + ", pan=" + pan + ", dob=" + dob
+				+ ", mobile=" + mobile + ", isEnterpriseUser=" + isEnterpriseUser + ", enabled=" + enabled
+				+ ", accountNonExpired=" + accountNonExpired + ", credentialsNonExpired=" + credentialsNonExpired
+				+ ", accountNonLocked=" + accountNonLocked + ", roles=" + roles + ", group=" + group + ", entities="
+				+ entities + "]";
+	}
+	
 }

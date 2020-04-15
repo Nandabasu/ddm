@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -39,13 +40,24 @@ public class UserRequest {
 	
 	private LocalDate dob;	
 	
+	@NotNull(message = "is this enterprise user! Please select....")
+	private Boolean isEnterprise;
+	
 	@NotBlank(message = "Mobile number cannot be blank")
 	@Pattern(regexp="(^$|[0-9]{10})", message = "Mobile number should contain only numeric values, lenght should not be more than 10")
 	private String mobile;
 
 	private List<String> roles;
 	
-	private String entityType;
+	private Long groupId;
+	
+	public Long getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Long groupId) {
+		this.groupId = groupId;
+	}
 
 	public long getId() {
 		return id;
@@ -53,14 +65,6 @@ public class UserRequest {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String getEntityType() {
-		return entityType;
-	}
-
-	public void setEntityType(String entityType) {
-		this.entityType = entityType;
 	}
 
 	public List<String> getRoles() {
@@ -135,11 +139,20 @@ public class UserRequest {
 		this.mobile = mobile;
 	}
 
+	public boolean getIsEnterprise() {
+		return isEnterprise;
+	}
+
+	public void setIsEnterprise(boolean isEnterprise) {
+		this.isEnterprise = isEnterprise;
+	}
+
 	@Override
 	public String toString() {
-		return "ProfileCreation [userName=" + userName + ", password=" + password + ", email=" + email + ", fullName="
-				+ fullName + ", occupation=" + occupation + ", pan=" + pan + ", dob=" + dob + ", mobile=" + mobile
-				+ ", roles=" + roles + "]";
+		return "UserRequest [id=" + id + ", userName=" + userName + ", password=" + password + ", email=" + email
+				+ ", fullName=" + fullName + ", occupation=" + occupation + ", pan=" + pan + ", dob=" + dob
+				+ ", isEnterprise=" + isEnterprise + ", mobile=" + mobile + ", roles=" + roles + ", groupId=" + groupId
+				+ "]";
 	}
 
 }

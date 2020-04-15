@@ -9,10 +9,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ddm.authorizationserver.exception.RecordNotFoundException;
+import com.ddm.authorizationserver.model.Entities;
 import com.ddm.authorizationserver.model.Permission;
 import com.ddm.authorizationserver.model.Role;
 import com.ddm.authorizationserver.model.User;
 import com.ddm.authorizationserver.repository.UserDetailRepository;
+import com.ddm.authorizationserver.response.EntitiesUserResponse;
+import com.ddm.authorizationserver.response.EntityResponse;
 import com.ddm.authorizationserver.response.GroupResponse;
 import com.ddm.authorizationserver.response.UserResponse;
 
@@ -27,6 +30,25 @@ public class UserService {
 		return userResponse;
 	}
 
+	public List<EntityResponse> buildEntityResponse(List<Entities> entities) {
+		List<EntityResponse> entityResponse = new ArrayList<EntityResponse>();
+		for( Entities entity: entities) {
+			EntitiesUserResponse user = buildFinalEntityResponse(entity.getUser());
+			entityResponse.add(new EntityResponse(entity.getId(), entity.getName(), entity.getType(), user));
+		}
+		return entityResponse;
+	}
+	
+	public EntityResponse buildEntityResponse(Entities entity) {
+			EntitiesUserResponse user = buildFinalEntityResponse(entity.getUser());
+			return new EntityResponse(entity.getId(), entity.getName(), entity.getType(), user);
+	}
+	
+	public EntitiesUserResponse buildFinalEntityResponse(User user) {
+		EntitiesUserResponse eUserResponse = new EntitiesUserResponse(user.getUsername(), user.getEmail(), user.getFullName(), user.getOccupation());
+		return eUserResponse;
+	}
+	
 	public List<UserResponse> buildUserReponse(List<User> userEntityList) {
 		List<UserResponse> userResponseList = new ArrayList<>();
 		for (User userEntity : userEntityList) {
@@ -52,14 +74,13 @@ public class UserService {
 		}
 		UserResponse userResponse = new UserResponse.UserResponseBuilder(userEntity.getUsername(),
 				userEntity.getEmail(), userEntity.getFullName(), userEntity.getOccupation(), userEntity.getPan(),
-				userEntity.getDob(), userEntity.getMobile(), roles, permissions, userEntity.getEntityType())
+				userEntity.getDob(), userEntity.getMobile(), roles, permissions)
 						.setGroup(groupResponse).build();
 		return userResponse;
 	}
 
 	public List<UserResponse> getAllGroupAdmins() {
 		List<User> userEntities = userRepository.getAllGroupAdmins();
-		System.out.println(userEntities);
 		return buildUserReponse(userEntities);
 	}
 

@@ -58,13 +58,10 @@ public class GroupController {
 	@PostMapping("/save")
 	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
 	public ResponseEntity<?> createGroup(@Valid @RequestBody GroupPayload group) {
-	
 		if(groupRepository.existsByName(group.getName())) {
 			return new ResponseEntity<>(new ApiResponse(false, "Group name already exists"), HttpStatus.BAD_REQUEST);
 		}
-		
 		Group groupObj = new Group(group.getName(), group.getDescription());
-
 		Group result  = groupRepository.save(groupObj);
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/groups")
 				.buildAndExpand(result).toUri();
@@ -85,16 +82,12 @@ public class GroupController {
 	@DeleteMapping(value = "/{id}")
 	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
 	public ResponseEntity<?> deleteGroup(@PathVariable("id") long id){
-
 		if(!groupRepository.existsById(id)) {
 			return new ResponseEntity<>(new ApiResponse(false, "Group does not exists"), HttpStatus.BAD_REQUEST);
 		}
-		
 		groupRepository.deleteById(id);
-		
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/groups")
 				.buildAndExpand(id).toUri();
-
 		return ResponseEntity.created(location).body(new ApiResponse(true, "Group Deleted Successfully"));
 	}
 }

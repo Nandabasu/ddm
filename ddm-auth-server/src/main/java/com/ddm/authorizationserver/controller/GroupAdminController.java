@@ -13,7 +13,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +34,6 @@ import com.ddm.authorizationserver.repository.UserDetailRepository;
 import com.ddm.authorizationserver.request.UserRequest;
 import com.ddm.authorizationserver.response.UserResponse;
 import com.ddm.authorizationserver.service.UserService;
-import com.ddm.authorizationserver.util.UserUtil;
 
 @RestController
 @RequestMapping(value = "v1/groups/admin")
@@ -67,32 +65,24 @@ public class GroupAdminController {
 	@PostMapping
 	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
 	public ResponseEntity<?> createGroupAdmin(@Valid @RequestBody UserRequest profile) {
+		
 		logger.info("create group admin by Master Admin.... createGroupAdmin");
 		if (userRepository.existsByEmail(profile.getEmail()) || userRepository.existsByUsername(profile.getUserName())
 				|| userRepository.existsByPan(profile.getPan()) || userRepository.existsByMobile(profile.getMobile())) {
 			return new ResponseEntity<>(new ApiResponse(false, "User already exists"), HttpStatus.BAD_REQUEST);
 		}
-		User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Set<Role> roles = roleRepository.findByName(profile.getRoles());
-		User user = null;
-		User result = null;
-		if (principal.getRoles().stream().anyMatch(role -> "MASTER_ADMIN".equalsIgnoreCase(role.getName()))) {
-
-			if (groupRepository.existsByName(profile.getUserName())) {
-				return new ResponseEntity<>(new ApiResponse(false, "Group already exists"), HttpStatus.BAD_REQUEST);
-			}
-			Group group = new Group(profile.getUserName(), profile.getFullName().concat(profile.getUserName()));
-			Group groupResult = groupRepository.save(group);
-			user = new User(profile.getUserName(), passwordEncoder.encode(profile.getPassword()), profile.getEmail(),
-					profile.getFullName(), profile.getOccupation(), profile.getPan(), profile.getDob(),
-					profile.getMobile(), null, true, true, true, true, false, roles, groupResult);
-
-			result = userRepository.save(user);
+		if (groupRepository.existsByName(profile.getUserName())) {
+			return new ResponseEntity<>(new ApiResponse(false, "Group already exists"), HttpStatus.BAD_REQUEST);
 		}
-
+		Set<Role> roles = roleRepository.findByName(profile.getRoles());
+		Group group = new Group(profile.getUserName(), profile.getFullName().concat(profile.getUserName()));
+		Group groupResult = groupRepository.save(group);
+		User user = new User(profile.getUserName(), passwordEncoder.encode(profile.getPassword()), profile.getEmail(),
+					profile.getFullName(), profile.getOccupation(), profile.getPan(), profile.getDob(),
+					profile.getMobile(), profile.getIsEnterprise(),true, true, true, true, roles, groupResult);
+		User result = userRepository.save(user);
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("v1/groups/admin")
 				.buildAndExpand(result).toUri();
-
 		return ResponseEntity.created(location).body(new ApiResponse(true, "Group admin successfully created"));
 	}
 
