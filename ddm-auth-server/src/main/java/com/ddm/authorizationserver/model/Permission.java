@@ -16,31 +16,35 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Table(name = "permission")
 public class Permission extends UserDateAudit implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
-	@Id
+    private static final long serialVersionUID = 1L;
+
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-	@Column(name = "name")
+    @Column(name = "name")
     private String name;
-    
-	@JsonBackReference
+
+    @JsonBackReference
     @ManyToMany(mappedBy = "permissions")
-    private Collection<Role> roles;
-    
-	public Collection<Role> getRoles() {
-		return roles;
-	}
-	public void setRoles(Collection<Role> roles) {
-		this.roles = roles;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	
+    private Collection<User> users;
+
+
+    public Collection<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Collection<User> users) {
+        this.users = users;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }
 

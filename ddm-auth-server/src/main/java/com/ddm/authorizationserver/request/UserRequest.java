@@ -5,154 +5,155 @@ import java.util.List;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserRequest {
-	
-	@JsonIgnore
-	private long id;
-	
-	@NotBlank(message="User name cannot be blank")
-	private String userName;
-	
-	@NotBlank(message = "Password cannot be blank")
-	@Size(min = 6, max = 20, message = "Password should contian minimum 6 and max 20 characters")
-	private String password;	
-	
-	@NotBlank(message = "email cannot be blank")
-	@Email
-	private String email;
 
-	@NotBlank(message = "Full name cannot be blank")
-	@Size(min = 2, max = 100)
-	private String fullName;
-	
-	@NotBlank(message = "Occupation cannot be blank")
-	private String occupation;
-	
-	@NotBlank(message = "PAN card number cannot be blank")
-	@Pattern(regexp="([A-Z]){5}([0-9]){4}([A-Z]){1}", message="Please enter valid PAN card number")
-	private String pan;	
-	
-	private LocalDate dob;	
-	
-	@NotNull(message = "is this enterprise user! Please select....")
-	private Boolean isEnterprise;
-	
-	@NotBlank(message = "Mobile number cannot be blank")
-	@Pattern(regexp="(^$|[0-9]{10})", message = "Mobile number should contain only numeric values, lenght should not be more than 10")
-	private String mobile;
 
-	private List<String> roles;
-	
-	private Long groupId;
-	
-	public Long getGroupId() {
-		return groupId;
-	}
+    @JsonIgnore
+    private long id;
 
-	public void setGroupId(Long groupId) {
-		this.groupId = groupId;
-	}
+    @NotBlank(message = "User name cannot be blank")
+    private String userName;
 
-	public long getId() {
-		return id;
-	}
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min = 6, max = 20, message = "Password should contian minimum 6 and max 20 characters")
+    private String password;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    @NotBlank(message = "email cannot be blank")
+    @Email
+    private String email;
 
-	public List<String> getRoles() {
-		return roles;
-	}
+    @NotBlank(message = "Full name cannot be blank")
+    @Size(min = 2, max = 100)
+    private String fullName;
 
-	public void setRoles(List<String> roles) { 
-		this.roles = roles;
-	}
+    @NotBlank(message = "Occupation cannot be blank")
+    private String occupation;
 
-	public String getUserName() {
-		return userName;
-	}
+    @NotBlank(message = "PAN card number cannot be blank")
+    @Pattern(regexp = "([A-Z]){5}([0-9]){4}([A-Z]){1}", message = "Please enter valid PAN card number")
+    private String pan;
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    private LocalDate dob;
 
-	public String getPassword() {
-		return password;
-	}
+    @NotBlank(message = "Mobile number cannot be blank")
+    @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number should contain only numeric values, lenght should not be more than 10")
+    private String mobile;
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    private List<String> roles;
 
-	public String getEmail() {
-		return email;
-	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public List<String> privileges;
 
-	public String getFullName() {
-		return fullName;
-	}
+    private Long groupId;
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+    public Long getGroupId() {
+        return groupId;
+    }
 
-	public String getOccupation() {
-		return occupation;
-	}
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
 
-	public void setOccupation(String occupation) {
-		this.occupation = occupation;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public String getPan() {
-		return pan;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setPan(String pan) {
-		this.pan = pan;
-	}
+    public List<String> getRoles() {
+        return roles;
+    }
 
-	public LocalDate getDob() {
-		return dob;
-	}
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
 
-	public void setDob(LocalDate dob) {
-		this.dob = dob;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public String getMobile() {
-		return mobile;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public boolean getIsEnterprise() {
-		return isEnterprise;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public void setIsEnterprise(boolean isEnterprise) {
-		this.isEnterprise = isEnterprise;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	@Override
-	public String toString() {
-		return "UserRequest [id=" + id + ", userName=" + userName + ", password=" + password + ", email=" + email
-				+ ", fullName=" + fullName + ", occupation=" + occupation + ", pan=" + pan + ", dob=" + dob
-				+ ", isEnterprise=" + isEnterprise + ", mobile=" + mobile + ", roles=" + roles + ", groupId=" + groupId
-				+ "]";
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    public String getPan() {
+        return pan;
+    }
+
+    public void setPan(String pan) {
+        this.pan = pan;
+    }
+
+    public LocalDate getDob() {
+        return dob;
+    }
+
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public List<String> getPrivileges() {
+        return privileges;
+    }
+
+    public void setPrivileges(List<String> privileges) {
+        this.privileges = privileges;
+    }
+
+
+    @Override
+    public String toString() {
+        return "UserRequest [id=" + id + ", userName=" + userName + ", password=" + password + ", email=" + email
+                + ", fullName=" + fullName + ", occupation=" + occupation + ", pan=" + pan + ", dob=" + dob
+                + ", mobile=" + mobile + ", roles=" + roles + ", groupId=" + groupId
+                + "]";
+    }
 
 }

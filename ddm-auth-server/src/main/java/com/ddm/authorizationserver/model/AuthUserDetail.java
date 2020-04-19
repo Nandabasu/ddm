@@ -10,24 +10,17 @@ import java.util.List;
 
 
 public class AuthUserDetail extends User implements UserDetails {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public AuthUserDetail(User user) {
+    public AuthUserDetail(User user) {
         super(user);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-
-        getRoles().forEach(role -> {
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
-            role.getPermissions().forEach(permission -> {
-                grantedAuthorities.add(new SimpleGrantedAuthority(permission.getName()));
-            });
-
-        });
+        getRoles().forEach(role -> grantedAuthorities.add(new SimpleGrantedAuthority(role.getName())));
+        getPermissions().forEach(permission -> grantedAuthorities.add(new SimpleGrantedAuthority(permission.getName())));
         return grantedAuthorities;
     }
 
@@ -60,6 +53,6 @@ public class AuthUserDetail extends User implements UserDetails {
     public boolean isEnabled() {
         return super.isEnabled();
     }
-    
-    
+
+
 }
