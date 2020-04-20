@@ -32,7 +32,7 @@ import com.ddm.authorizationserver.service.UserService;
 @RestController
 @RequestMapping(value = "v1/entities")
 public class EntityController {
-	private static final Logger logger = LoggerFactory.getLogger(GroupAdminController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EntityController.class);
 
 	@Autowired
 	EntitiesRepository entitiesRepository;
