@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ddm.authorizationserver.model.Role;
-import com.ddm.authorizationserver.payload.ApiResponse;
-import com.ddm.authorizationserver.payload.RolePayload;
 import com.ddm.authorizationserver.repository.RoleRepository;
+import com.ddm.authorizationserver.request.RoleRequest;
+import com.ddm.authorizationserver.response.ApiResponse;
 
 @RestController
 @RequestMapping("/api/v1/roles")
@@ -50,7 +50,7 @@ public class RoleController {
 	}
 	
 	@PostMapping("/save")
-	public ResponseEntity<?> addRole(@Valid @RequestBody RolePayload role) {
+	public ResponseEntity<?> addRole(@Valid @RequestBody RoleRequest role) {
 	
 		if(roleRepository.existsByName(role.getRoleName())) {
 			return new ResponseEntity<>(new ApiResponse(false, "Role name already exists"), HttpStatus.BAD_REQUEST);

@@ -13,10 +13,11 @@ public class ResourceServer extends ResourceServerConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().
-        authorizeRequests()
-        .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**")
+		http.csrf().disable()
+		.authorizeRequests()
+        .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**", "/signup/**")
         .permitAll()
+        .antMatchers("/v1/previllage/**").hasRole("MASTER_ADMIN")
         .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

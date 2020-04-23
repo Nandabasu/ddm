@@ -1,6 +1,6 @@
-package com.ddm.authorizationserver.payload;
+package com.ddm.authorizationserver.request;
 
-public class ModifyUserPayload {
+public class UpdateUserRequest {
 
 	private long id;
 	private String occupation;

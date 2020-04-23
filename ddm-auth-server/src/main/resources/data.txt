@@ -1,4 +1,4 @@
-INSERT INTO oauth_client_details (client_id, client_secret, web_server_redirect_uri, scope, access_token_validity, refresh_token_validity, resource_ids, authorized_grant_types, additional_information) VALUES ('mobile', '{bcrypt}$2a$10$gPhlXZfms0EpNHX0.HHptOhoFD1AoxSr/yUIdTqA8vtjeP4zi0DDu', 'http://localhost:8080/code', 'READ,WRITE', '3600', '10000', 'inventory,payment,DDM', 'authorization_code,password,refresh_token,implicit', '{}');
+INSERT INTO oauth_client_details (client_id, client_secret, web_server_redirect_uri, scope, access_token_validity, refresh_token_validity, resource_ids, authorized_grant_types, additional_information) VALUES ('ddm', '{bcrypt}$2a$10$JQdV.4fiHjPR07E.amGEBOXWy/9wxkneSc/E5bNfXr9Y7il1OaMtO', 'http://localhost:8080/code', 'READ,WRITE', '3600', '10000', 'inventory,payment,DDM', 'authorization_code,password,refresh_token,implicit', '{}');
 
 INSERT INTO `permission`
 (`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`name`)
@@ -45,14 +45,6 @@ VALUES(2,NOW(),NOW(),1,1,'GROUP_ADMIN');
 INSERT INTO `role`(`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`name`)
 VALUES(3,NOW(),NOW(),1,1,'USER');
 
-insert into permission_role (permission_id, role_id) values(1, 1);
-insert into permission_role (permission_id, role_id) values(2, 1);
-insert into permission_role (permission_id, role_id) values(7, 1);
-insert into permission_role (permission_id, role_id) values(8, 1);
-insert into permission_role (permission_id, role_id) values(9, 1);
-
-INSERT INTO  `role_user` (`user_id`, `role_id`) VALUES ('1', '1');
-
 INSERT INTO `digital_ddm`.`ddm_group`
 (`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`description`,`group_name`)
 VALUES
@@ -65,3 +57,7 @@ VALUES
 (1,NOW(),NOW(),1,1,1,1,1,
 '1988-10-10','dheeraj@gmail.com',1,'Dheeraj Kumar',0,'9844906886','Charted Accountant','AQPPN9999N','{bcrypt}$2a$10$88q3eW0AbvDmgjO1sepGbeFlYPuaDvVEaDXNsUPf/ar9iffNGFqP6','dheeraj',1);
 
+INSERT INTO  `role_user` (`user_id`, `role_id`) VALUES ('1', '1');
+
+INSERT INTO `digital_ddm`.`globalparameters`(`id`,`createdAt`,`updatedAt`,`createdBy`,`updatedBy`,`parameter`,`value`)
+VALUES(1,NOW(),NOW(),1,1,'Entity Limit',10);

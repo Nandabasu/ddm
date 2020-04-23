@@ -2,9 +2,11 @@ package com.ddm.authorizationserver.model;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,16 +27,26 @@ public class Permission extends UserDateAudit implements Serializable {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
+    private String description;
+    
     @JsonBackReference
-    @ManyToMany(mappedBy = "permissions")
-    private Collection<User> users;
+    @ManyToMany(mappedBy = "permissions", fetch = FetchType.EAGER)
+    private List<User> users;
+    
+    public Permission() { }
+    
+    public Permission(String name, String description) {
+		super();
+		this.name = name;
+		this.description = description;
+	}
 
-
-    public Collection<User> getUsers() {
+	public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Collection<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 
@@ -45,6 +57,18 @@ public class Permission extends UserDateAudit implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public long getId() {
+		return id;
+	}
 
 }
 

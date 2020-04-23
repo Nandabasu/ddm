@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,9 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Table(name = "ENTITIES")
-@Entity
-public class Entities extends UserDateAudit implements Serializable{
+@Table(name = "ENTITY")
+@javax.persistence.Entity
+public class Entity extends UserDateAudit implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
@@ -32,9 +31,9 @@ public class Entities extends UserDateAudit implements Serializable{
 	@JoinColumn(name = "userId", nullable = false)
 	private User user;
 
-	public Entities() { }
+	public Entity() { }
 	
-	public Entities(String entityName, String entityType) {
+	public Entity(String entityName, String entityType) {
 		super();
 		this.name = entityName;
 		this.type = entityType;
@@ -72,7 +71,6 @@ public class Entities extends UserDateAudit implements Serializable{
 	public String toString() {
 		return "Entities [id=" + id + ", name=" + name + ", type=" + type + ", user=" + user + "]";
 	}
-
 
 }
 

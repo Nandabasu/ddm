@@ -2,17 +2,11 @@ package com.ddm.authorizationserver.controller;
 
 import java.net.URI;
 import java.security.Principal;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
-import com.ddm.authorizationserver.exception.DdmException;
-import com.ddm.authorizationserver.model.Permission;
-import com.ddm.authorizationserver.payload.ErrorResponse;
-import com.ddm.authorizationserver.payload.ProfileCreation;
-import com.ddm.authorizationserver.repository.PermissionRepository;
-import com.ddm.authorizationserver.response.UserResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,16 +24,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.ddm.authorizationserver.exception.DdmException;
 import com.ddm.authorizationserver.exception.RecordNotFoundException;
 import com.ddm.authorizationserver.exception.ResourceNotFoundException;
 import com.ddm.authorizationserver.model.Group;
 import com.ddm.authorizationserver.model.Role;
 import com.ddm.authorizationserver.model.User;
-import com.ddm.authorizationserver.payload.ApiResponse;
-import com.ddm.authorizationserver.repository.GroupRepository;
-import com.ddm.authorizationserver.repository.RoleRepository;
 import com.ddm.authorizationserver.repository.UserDetailRepository;
 import com.ddm.authorizationserver.request.UserRequest;
+import com.ddm.authorizationserver.response.ApiResponse;
+import com.ddm.authorizationserver.response.UserResponse;
 import com.ddm.authorizationserver.service.UserService;
 
 @RestController
@@ -98,5 +91,11 @@ public class UserController {
         List<UserResponse> userResponseList = userService.getAllUsersByGroupAdminId(id);
         return new ResponseEntity<List<UserResponse>>(userResponseList, new HttpHeaders(), HttpStatus.OK);
     }
-
+    
+    @PostMapping(value = "/signup")
+    public ResponseEntity<?> signUp(@RequestBody @Valid UserRequest signupRequest) {
+        User user = userService.signUp(signupRequest);
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/signup").buildAndExpand(user).toUri();
+        return ResponseEntity.created(location).body(new ApiResponse(true, "You have successfully signed up"));
+    }
 }

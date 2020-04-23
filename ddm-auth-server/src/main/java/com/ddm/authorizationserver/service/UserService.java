@@ -39,16 +39,24 @@ public class UserService {
         return userResponse;
     }
 
-    public List<EntityResponse> buildEntityResponse(List<Entities> entities) {
+    public List<EntityResponse> buildEntityResponse(List<Entity> entities) {
         List<EntityResponse> entityResponse = new ArrayList<EntityResponse>();
-        for (Entities entity : entities) {
+        for (Entity entity : entities) {
             EntitiesUserResponse user = buildFinalEntityResponse(entity.getUser());
             entityResponse.add(new EntityResponse(entity.getId(), entity.getName(), entity.getType(), user));
         }
         return entityResponse;
     }
 
-    public EntityResponse buildEntityResponse(Entities entity) {
+    public List<EntityResponse> buildEntities(List<Entity> entities) {
+        List<EntityResponse> entityResponse = new ArrayList<EntityResponse>();
+        for (Entity entity : entities) {
+            entityResponse.add(new EntityResponse(entity.getId(), entity.getName(), entity.getType()));
+        }
+        return entityResponse;
+    }
+    
+    public EntityResponse buildEntityResponse(Entity entity) {
         EntitiesUserResponse user = buildFinalEntityResponse(entity.getUser());
         return new EntityResponse(entity.getId(), entity.getName(), entity.getType(), user);
     }
@@ -198,5 +206,13 @@ public class UserService {
                 group);
         user.setPermissions(permissionService.getPermissions(profile.getPrivileges(), roles));
         return userRepository.save(user);
+    }
+    
+    
+    public User signUp(UserRequest signupRequest) {
+        Set<Role> roles = roleRepository.findByName(signupRequest.getRoles());
+        Group groupResult = getGroup(signupRequest);
+        User  result = saveUser(signupRequest, roles, groupResult);
+    	return result;
     }
 }

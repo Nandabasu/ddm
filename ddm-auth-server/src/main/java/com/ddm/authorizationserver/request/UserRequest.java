@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserRequest {
 
-
     @JsonIgnore
     private long id;
 

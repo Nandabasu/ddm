@@ -1,4 +1,4 @@
-package com.ddm.authorizationserver.payload;
+package com.ddm.authorizationserver.response;
 
 public class ApiResponse {
 

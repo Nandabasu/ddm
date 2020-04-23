@@ -1,10 +1,14 @@
 package com.ddm.authorizationserver.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class EntityResponse {
 
 	private long id;
 	private String name;
 	private String type;
+	@JsonInclude(Include.NON_NULL)
 	private EntitiesUserResponse user;
 	
 	public EntityResponse() { }
@@ -17,6 +21,13 @@ public class EntityResponse {
 		this.user = user;
 	}
 
+	public EntityResponse(long id, String name, String type) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.type = type;
+	}
+	
 	public long getId() {
 		return id;
 	}

@@ -84,8 +84,8 @@ public class User extends UserDateAudit implements Serializable {
     private Group group;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
-    private List<Entities> entities = new ArrayList<Entities>();
-
+    private List<com.ddm.authorizationserver.model.Entity> entities = new ArrayList<com.ddm.authorizationserver.model.Entity>();
+    
     public User() {
     }
 
@@ -252,15 +252,15 @@ public class User extends UserDateAudit implements Serializable {
         this.isEnterpriseUser = isEnterpriseUser;
     }
 
-    public List<Entities> getEntities() {
-        return entities;
-    }
+    public List<com.ddm.authorizationserver.model.Entity> getEntities() {
+		return entities;
+	}
 
-    public void setEntities(List<Entities> entities) {
-        this.entities = entities;
-    }
+	public void setEntities(List<com.ddm.authorizationserver.model.Entity> entities) {
+		this.entities = entities;
+	}
 
-    public Collection<Permission> getPermissions() {
+	public Collection<Permission> getPermissions() {
         return permissions;
     }
 
@@ -268,14 +268,14 @@ public class User extends UserDateAudit implements Serializable {
         this.permissions = permissions;
     }
 
-    @Override
-    public String toString() {
-        return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email
-                + ", fullName=" + fullName + ", occupation=" + occupation + ", pan=" + pan + ", dob=" + dob
-                + ", mobile=" + mobile + ", isEnterpriseUser=" + isEnterpriseUser + ", enabled=" + enabled
-                + ", accountNonExpired=" + accountNonExpired + ", credentialsNonExpired=" + credentialsNonExpired
-                + ", accountNonLocked=" + accountNonLocked + ", roles=" + roles + ", group=" + group + ", entities="
-                + entities + "]";
-    }
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email
+				+ ", fullName=" + fullName + ", occupation=" + occupation + ", pan=" + pan + ", dob=" + dob
+				+ ", mobile=" + mobile + ", isEnterpriseUser=" + isEnterpriseUser + ", enabled=" + enabled
+				+ ", accountNonExpired=" + accountNonExpired + ", credentialsNonExpired=" + credentialsNonExpired
+				+ ", accountNonLocked=" + accountNonLocked + ", roles=" + roles + ", permissions=" + permissions
+				+ ", group=" + group + ", entities=" + entities + "]";
+	}
 
 }

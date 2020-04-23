@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ddm.authorizationserver.model.Group;
-import com.ddm.authorizationserver.payload.ApiResponse;
-import com.ddm.authorizationserver.payload.GroupPayload;
 import com.ddm.authorizationserver.repository.GroupRepository;
+import com.ddm.authorizationserver.request.GroupRequest;
+import com.ddm.authorizationserver.response.ApiResponse;
 import com.ddm.authorizationserver.response.GroupResponse;
 import com.ddm.authorizationserver.response.UserResponse;
 import com.ddm.authorizationserver.service.GroupService;
@@ -43,7 +43,7 @@ public class GroupResource {
 
 	@PostMapping
 	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
-	public ResponseEntity<?> createGroup(@Valid @RequestBody GroupPayload group) {
+	public ResponseEntity<?> createGroup(@Valid @RequestBody GroupRequest group) {
 
 		if (groupRepository.existsByName(group.getName())) {
 			return new ResponseEntity<>(new ApiResponse(false, "Group name already exists"), HttpStatus.BAD_REQUEST);
@@ -79,7 +79,7 @@ public class GroupResource {
 
 	@PutMapping
 	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
-	public ResponseEntity<?> updateGroup(@Valid @RequestBody GroupPayload group) {
+	public ResponseEntity<?> updateGroup(@Valid @RequestBody GroupRequest group) {
 
 		if (!groupRepository.existsById(group.getId())) {
 			return new ResponseEntity<>(new ApiResponse(false, "Group does not exists"), HttpStatus.BAD_REQUEST);

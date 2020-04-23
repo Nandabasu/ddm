@@ -1,4 +1,4 @@
-package com.ddm.authorizationserver.payload;
+package com.ddm.authorizationserver.request;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import com.ddm.authorizationserver.model.Permission;
 
-public class RolePayload {
+public class RoleRequest {
 
 	@NotNull(message = "Rolen name cannot be null")
 	private String roleName;

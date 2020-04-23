@@ -1,8 +1,8 @@
-package com.ddm.authorizationserver.payload;
+package com.ddm.authorizationserver.request;
 
 import javax.validation.constraints.NotNull;
 
-public class EntityPayload {
+public class EntityRequest {
 
 	@NotNull(message = "Entity name cannot be null")
 	private String entityName;

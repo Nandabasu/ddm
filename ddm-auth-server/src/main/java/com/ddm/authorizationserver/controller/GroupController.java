@@ -22,9 +22,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ddm.authorizationserver.exception.ResourceNotFoundException;
 import com.ddm.authorizationserver.model.Group;
-import com.ddm.authorizationserver.payload.ApiResponse;
-import com.ddm.authorizationserver.payload.GroupPayload;
 import com.ddm.authorizationserver.repository.GroupRepository;
+import com.ddm.authorizationserver.request.GroupRequest;
+import com.ddm.authorizationserver.response.ApiResponse;
 
 @RequestMapping("/api/v1/groups")
 @RestController
@@ -57,7 +57,7 @@ public class GroupController {
  
 	@PostMapping("/save")
 	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
-	public ResponseEntity<?> createGroup(@Valid @RequestBody GroupPayload group) {
+	public ResponseEntity<?> createGroup(@Valid @RequestBody GroupRequest group) {
 		if(groupRepository.existsByName(group.getName())) {
 			return new ResponseEntity<>(new ApiResponse(false, "Group name already exists"), HttpStatus.BAD_REQUEST);
 		}
@@ -71,7 +71,7 @@ public class GroupController {
 	
 	@PutMapping("/update")
 	@PreAuthorize("hasAuthority('MASTER_ADMIN')")
-	public Group updateGroup(@Valid @RequestBody GroupPayload group) {
+	public Group updateGroup(@Valid @RequestBody GroupRequest group) {
         return groupRepository.findById(group.getId()).map(group1 -> {
             group1.setName(group.getName());
             group1.setDescription(group.getDescription());

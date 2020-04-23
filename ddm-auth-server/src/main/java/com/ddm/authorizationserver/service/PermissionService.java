@@ -1,15 +1,15 @@
 package com.ddm.authorizationserver.service;
 
-import com.ddm.authorizationserver.model.Permission;
-import com.ddm.authorizationserver.model.Role;
-import com.ddm.authorizationserver.repository.PermissionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ddm.authorizationserver.model.Permission;
+import com.ddm.authorizationserver.model.Role;
+import com.ddm.authorizationserver.repository.PermissionRepository;
 
 @Service
 public class PermissionService {

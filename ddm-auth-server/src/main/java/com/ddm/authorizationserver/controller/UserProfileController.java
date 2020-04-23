@@ -22,9 +22,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ddm.authorizationserver.exception.ResourceNotFoundException;
 import com.ddm.authorizationserver.model.User;
-import com.ddm.authorizationserver.payload.ApiResponse;
-import com.ddm.authorizationserver.payload.ModifyUserPayload;
 import com.ddm.authorizationserver.repository.UserDetailRepository;
+import com.ddm.authorizationserver.request.UpdateUserRequest;
+import com.ddm.authorizationserver.response.ApiResponse;
 import com.ddm.authorizationserver.response.UserResponse;
 import com.ddm.authorizationserver.service.UserService;
 
@@ -73,7 +73,7 @@ public class UserProfileController {
 	}
 	
 	@PutMapping(value = "/user")
-	public UserResponse updateUser(@Valid @RequestBody ModifyUserPayload userPayload){
+	public UserResponse updateUser(@Valid @RequestBody UpdateUserRequest userPayload){
 		logger.info("Update user method:");
         return userRepository.findById(userPayload.getId()).map(user -> {
         	user.setOccupation(userPayload.getOccupation());
